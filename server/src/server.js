@@ -14,6 +14,9 @@ import orderRoutes from './routes/orderRoutes.js'
 import reviewRoutes from './routes/reviewRoutes.js'
 import couponRoutes from './routes/couponRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import birthdayRoutes from './routes/birthdayRoutes.js'
+import adminBirthdayRoutes from './routes/adminBirthdayRoutes.js'
+import { scheduleBirthdayJob } from './jobs/birthdayJob.js'
 
 dotenv.config()
 
@@ -37,6 +40,8 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/coupons', couponRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/admin/birthdays', adminBirthdayRoutes)
+app.use('/api/birthday', birthdayRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
@@ -47,6 +52,7 @@ const start = async () => {
   try {
     if (process.env.MONGODB_URI) {
       await connectDB()
+      scheduleBirthdayJob()
     } else {
       console.warn('MONGODB_URI not set — starting without database connection')
     }

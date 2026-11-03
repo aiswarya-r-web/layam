@@ -1,11 +1,27 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import Spinner from '../components/Spinner'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const inr = (n) => `₹${Number(n).toLocaleString('en-IN')}`
 
 export default function Cart() {
-  const { cart, updateQty, removeFromCart } = useCart()
+  const { cart, cartLoading, updateQty, removeFromCart } = useCart()
+  const [busyId, setBusyId] = useState(null)
+
+  const run = async (id, fn) => {
+    if (busyId) return
+    setBusyId(id)
+    try {
+      await fn()
+    } catch {} finally {
+      setBusyId(null)
+    }
+  }
+
+  if (cartLoading) return <LoadingSpinner text="Loading your cart..." />
 
   if (cart.items.length === 0) {
     return (
@@ -31,27 +47,35 @@ export default function Cart() {
               key={product._id}
               className="flex gap-4 rounded-[20px] border border-[#e8dcc8] bg-white p-4"
             >
-              <Link to={`/products/${product.slug}`}>
+              <Link to={`/products/${product._id}`}>
                 <img src={product.images?.[0]} alt={product.name} className="h-24 w-24 rounded-2xl object-cover" />
               </Link>
               <div className="flex flex-1 flex-col">
-                <Link to={`/products/${product.slug}`} className="font-bold text-[#5d3a1a] hover:text-[#7a4a21]">
+                <Link to={`/products/${product._id}`} className="font-bold text-[#5d3a1a] hover:text-[#7a4a21]">
                   {product.name}
                 </Link>
                 <p className="text-sm text-[#8a6a4a]">{inr(product.price)} each</p>
                 <div className="mt-auto flex items-center justify-between">
-                  <div className="flex items-center rounded-full border border-[#e5d3b3]">
+                  <div className={`flex items-center rounded-full border border-[#e5d3b3] ${busyId === product._id ? 'opacity-50' : ''}`}>
                     <button
-                      onClick={() => updateQty(product._id, quantity - 1).catch(() => {})}
-                      className="p-2"
+                      onClick={() => run(product._id, () => updateQty(product._id, quantity - 1))}
+                      disabled={Boolean(busyId)}
+                      className="p-2 disabled:opacity-40"
                       aria-label="Decrease"
                     >
                       <Minus size={14} />
                     </button>
-                    <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                    <span className="w-8 text-center text-sm font-bold">
+                      {busyId === product._id ? (
+                        <Spinner className="h-3 w-3 border-[#7a4a21]/30 border-t-[#7a4a21]" />
+                      ) : (
+                        quantity
+                      )}
+                    </span>
                     <button
-                      onClick={() => updateQty(product._id, quantity + 1).catch(() => {})}
-                      className="p-2"
+                      onClick={() => run(product._id, () => updateQty(product._id, quantity + 1))}
+                      disabled={Boolean(busyId)}
+                      className="p-2 disabled:opacity-40"
                       aria-label="Increase"
                     >
                       <Plus size={14} />
@@ -61,8 +85,9 @@ export default function Cart() {
                 </div>
               </div>
               <button
-                onClick={() => removeFromCart(product._id).catch(() => {})}
-                className="self-start rounded-full p-2 text-[#a08b74] transition hover:bg-red-50 hover:text-red-600"
+                onClick={() => run(product._id, () => removeFromCart(product._id))}
+                disabled={Boolean(busyId)}
+                className="self-start rounded-full p-2 text-[#a08b74] transition hover:bg-red-50 hover:text-red-600 disabled:opacity-40"
                 aria-label="Remove"
               >
                 <Trash2 size={18} />

@@ -12,13 +12,14 @@ export const getPet = async (req, res) => {
 }
 
 export const createPet = async (req, res) => {
-  const { name, breed, age, weight, gender, image, foodPreferences, allergies } = req.body
+  const { name, breed, dateOfBirth, age, weight, gender, image, foodPreferences, allergies } = req.body
   if (!name) return res.status(400).json({ message: 'Dog name is required' })
 
   const pet = await Pet.create({
     userId: req.user._id,
     name,
     breed,
+    dateOfBirth,
     age,
     weight,
     gender,

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../api/axios'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { useToast } from '../context/ToastContext'
 
 const inr = (n) => `₹${Number(n).toLocaleString('en-IN')}`
 
@@ -15,6 +16,7 @@ const STATUS_COLORS = {
 
 export default function OrderDetails() {
   const { id } = useParams()
+  const { toast } = useToast()
   const [order, setOrder] = useState(null)
   const [msg, setMsg] = useState('')
 
@@ -29,8 +31,11 @@ export default function OrderDetails() {
       const r = await api.patch(`/orders/${id}/cancel`)
       setOrder(r.data.order)
       setMsg('Order cancelled successfully')
+      toast('Order cancelled', 'info')
     } catch (err) {
-      setMsg(err.response?.data?.message || 'Could not cancel order')
+      const message = err.response?.data?.message || 'Could not cancel order'
+      setMsg(message)
+      toast(message, 'error')
     }
   }
 

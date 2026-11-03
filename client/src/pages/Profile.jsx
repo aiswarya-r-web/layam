@@ -1,9 +1,18 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Dog, LogOut, Package, User } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function Profile() {
   const { user, logout } = useAuth()
+  const { toast } = useToast()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    toast('Logged out', 'info')
+    navigate('/', { replace: true })
+  }
 
   return (
     <main className="mx-auto max-w-[800px] px-6 py-10 md:px-14">
@@ -49,7 +58,7 @@ export default function Profile() {
           <span className="font-bold text-[#5d3a1a]">My Dogs</span>
         </Link>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="flex items-center gap-3 rounded-[20px] border border-red-200 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
         >
           <LogOut size={24} className="text-red-500" />

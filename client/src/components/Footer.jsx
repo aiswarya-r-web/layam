@@ -1,4 +1,4 @@
-import { Heart, PawPrint } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -7,11 +7,13 @@ export default function Footer() {
       <div className="mx-auto grid max-w-[1400px] gap-10 px-6 py-12 md:grid-cols-4 md:px-14">
         <div>
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-white text-[#8a5a2b]">
-              <PawPrint size={22} fill="currentColor" />
-            </div>
+            <img
+              src="/dog-pic.png"
+              alt="Vallu mascot"
+              className="logo-dog h-11 w-11 rounded-full border-2 border-[#e5d3b3] bg-white object-cover"
+            />
             <span className="text-xl font-extrabold">
-              LAYAM<span className="text-[#8a5a2b]">.</span>
+              Vallu<span className="text-[#8a5a2b]">.</span>
             </span>
           </Link>
           <p className="mt-4 text-sm text-[#8a6a4a]">
@@ -65,7 +67,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-[#e8dcc8] py-5 text-center text-xs text-[#a08b74]">
-        © {new Date().getFullYear()} Layam. Made with love for good dogs everywhere.
+        © {new Date().getFullYear()} Vallu. Made with love for good dogs everywhere.
       </div>
     </footer>
   )

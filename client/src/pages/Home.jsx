@@ -3,7 +3,20 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Heart, PawPrint, Truck, ShieldCheck, BadgePercent, Bone } from 'lucide-react'
 import api from '../api/axios'
 import ProductCard from '../components/ProductCard'
-import LoadingSpinner from '../components/LoadingSpinner'
+import ProductCardSkeleton from '../components/ProductCardSkeleton'
+
+const CATEGORY_ICONS = {
+  'dog-food': '🥣',
+  'treats-snacks': '🍪',
+  'toys-playtime': '🎾',
+  'grooming-hygiene': '🧴',
+  'collars-leashes': '🦮',
+  'beds-furniture': '🛏️',
+  'health-wellness': '❤️',
+  'clothing-accessories': '👕',
+  'feeding-accessories': '🍖',
+  'travel-accessories': '🧳',
+}
 
 const perks = [
   { icon: Truck, title: 'Free Delivery', text: 'On orders above ₹999' },
@@ -36,7 +49,7 @@ export default function Home() {
       <section className="relative mx-auto grid max-w-[1600px] grid-cols-1 items-center gap-10 px-6 py-10 md:px-14 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:px-20">
         <div className="relative z-10 flex flex-col items-start">
           <span className="mb-5 rounded-full border border-[#e5d3b3] bg-white/60 px-4 py-2 text-xs font-semibold tracking-widest text-[#8a5a2b]">
-            🐾 WELCOME TO LAYAM
+            🐾 WELCOME TO Vallu
           </span>
 
           <h1 className="max-w-[650px] text-5xl font-extrabold leading-[1.12] tracking-tight text-[#5d3a1a] md:text-6xl xl:text-[68px]">
@@ -87,18 +100,35 @@ export default function Home() {
       </section>
 
       {/* CATEGORIES */}
-      <section className="mx-auto max-w-[1400px] px-6 py-12 md:px-14">
-        <h2 className="text-3xl font-extrabold text-[#5d3a1a]">Shop by Category</h2>
-        <div className="mt-6 flex gap-3 overflow-x-auto pb-2">
-          {categories.map((c) => (
+      <section className="relative mx-auto max-w-[1400px] px-6 py-12 md:px-14">
+        <PawPrint size={90} className="absolute right-6 top-4 text-[#f1e3cb]" fill="currentColor" />
+        <div className="flex items-center gap-2">
+          <h2 className="text-3xl font-extrabold text-[#5d3a1a]">Shop by Category</h2>
+          <PawPrint size={28} className="text-[#dda044]" fill="currentColor" />
+        </div>
+        <p className="mt-1 text-sm text-[#8a6a4a]">
+          Find everything your furry friend needs, all in one place.
+        </p>
+
+        <div className="mt-6 flex gap-3 overflow-x-auto pb-4 lg:overflow-visible">
+          {categories.slice(0, 5).map((c) => (
             <Link
               key={c._id}
               to={`/shop?category=${c.slug}`}
-              className="whitespace-nowrap rounded-full border border-[#e5d3b3] bg-white px-5 py-2.5 text-sm font-semibold text-[#6b4423] transition hover:-translate-y-0.5 hover:bg-[#7a4a21] hover:text-white"
+              className="group flex shrink-0 items-center gap-3 whitespace-nowrap rounded-full border border-[#e8dcc8] bg-white py-2.5 pl-3 pr-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#dda044] hover:shadow-lg"
             >
-              {c.name}
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#faf3e7] text-lg transition group-hover:bg-[#f2cf8b]">
+                {CATEGORY_ICONS[c.slug] || '🐾'}
+              </span>
+              <span className="text-sm font-bold text-[#5d3a1a]">{c.name}</span>
             </Link>
           ))}
+        </div>
+
+        <div className="mt-2 flex items-center gap-3">
+          <div className="h-px flex-1 bg-[#e8dcc8]" />
+          <PawPrint size={18} className="text-[#dda044]" fill="currentColor" />
+          <div className="h-px flex-1 bg-[#e8dcc8]" />
         </div>
       </section>
 
@@ -110,20 +140,16 @@ export default function Home() {
             View all →
           </Link>
         </div>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          <div className="mt-8 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-            {featured.map((p) => (
-              <ProductCard key={p._id} product={p} />
-            ))}
-          </div>
-        )}
+        <div className="mt-8 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+          {loading
+            ? Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)
+            : featured.map((p) => <ProductCard key={p._id} product={p} />)}
+        </div>
       </section>
 
       {/* WHY LAYAM */}
       <section className="mx-auto max-w-[1400px] px-6 py-14 md:px-14">
-        <h2 className="text-center text-3xl font-extrabold text-[#5d3a1a]">Why choose Layam?</h2>
+        <h2 className="text-center text-3xl font-extrabold text-[#5d3a1a]">Why choose Vallu?</h2>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {perks.map(({ icon: Icon, title, text }) => (
             <div

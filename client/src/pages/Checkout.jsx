@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BadgePercent } from 'lucide-react'
 import api from '../api/axios'
+import Spinner from '../components/Spinner'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import { useCart } from '../context/CartContext'
 
 const inr = (n) => `₹${Number(n).toLocaleString('en-IN')}`
@@ -11,7 +14,8 @@ const emptyAddr = { name: '', phone: '', street: '', city: '', state: '', postal
 
 export default function Checkout() {
   const { user } = useAuth()
-  const { cart, refresh } = useCart()
+  const { cart, cartLoading, refresh } = useCart()
+  const { toast } = useToast()
   const navigate = useNavigate()
 
   const defaultAddr = user?.addresses?.find((a) => a.isDefault) || user?.addresses?.[0]
@@ -28,20 +32,27 @@ export default function Checkout() {
   const [coupon, setCoupon] = useState(null)
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
+  const [couponBusy, setCouponBusy] = useState(false)
 
   const set = (k) => (e) => setAddress({ ...address, [k]: e.target.value })
 
   const applyCoupon = async () => {
     setMsg('')
+    setCouponBusy(true)
     try {
       const res = await api.post('/coupons/validate', {
         code: couponInput,
         orderAmount: cart.subtotal,
       })
       setCoupon(res.data)
+      toast(`${res.data.code} applied`)
     } catch (err) {
+      const message = err.response?.data?.message || 'Invalid coupon'
       setCoupon(null)
-      setMsg(err.response?.data?.message || 'Invalid coupon')
+      setMsg(message)
+      toast(message, 'error')
+    } finally {
+      setCouponBusy(false)
     }
   }
 
@@ -59,12 +70,17 @@ export default function Checkout() {
         paymentMethod: 'cod',
       })
       await refresh()
+      toast('Order placed successfully')
       navigate(`/orders/${res.data.order._id}`, { replace: true })
     } catch (err) {
-      setMsg(err.response?.data?.message || 'Could not place order')
+      const message = err.response?.data?.message || 'Could not place order'
+      setMsg(message)
+      toast(message, 'error')
       setBusy(false)
     }
   }
+
+  if (cartLoading) return <LoadingSpinner text="Preparing checkout..." />
 
   if (cart.items.length === 0) {
     navigate('/cart', { replace: true })
@@ -129,9 +145,10 @@ export default function Checkout() {
             <button
               type="button"
               onClick={applyCoupon}
-              className="inline-flex items-center gap-1 rounded-full border border-[#7a4a21] px-4 text-sm font-bold text-[#7a4a21] transition hover:bg-[#f1e6d2]"
+              disabled={couponBusy || !couponInput}
+              className="inline-flex items-center gap-1 rounded-full border border-[#7a4a21] px-4 text-sm font-bold text-[#7a4a21] transition hover:bg-[#f1e6d2] disabled:opacity-50"
             >
-              <BadgePercent size={15} /> Apply
+              {couponBusy ? <Spinner className="h-3.5 w-3.5 border-[#7a4a21]/30 border-t-[#7a4a21]" /> : <BadgePercent size={15} />} Apply
             </button>
           </div>
           {coupon && (

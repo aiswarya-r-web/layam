@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { PawPrint } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function Signup() {
   const { register } = useAuth()
+  const { toast } = useToast()
   const navigate = useNavigate()
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirm: '' })
   const [error, setError] = useState('')
@@ -20,10 +21,13 @@ export default function Signup() {
     }
     setBusy(true)
     try {
-      await register({ name: form.name, email: form.email, password: form.password, phone: form.phone })
-      navigate('/', { replace: true })
+      const user = await register({ name: form.name, email: form.email, password: form.password, phone: form.phone })
+      toast(`Welcome to Layam, ${user.name.split(' ')[0]}!`)
+      navigate('/home', { replace: true })
     } catch (err) {
-      setError(err.response?.data?.message || 'Signup failed')
+      const message = err.response?.data?.message || 'Signup failed'
+      setError(message)
+      toast(message, 'error')
     } finally {
       setBusy(false)
     }
@@ -41,10 +45,12 @@ export default function Signup() {
     <main className="flex min-h-[70vh] items-center justify-center px-6 py-12">
       <div className="w-full max-w-md rounded-[30px] border border-[#e8dcc8] bg-white p-8 shadow-xl">
         <div className="flex flex-col items-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-[#faf3e7] text-[#8a5a2b]">
-            <PawPrint size={28} fill="currentColor" />
-          </div>
-          <h1 className="mt-4 text-2xl font-extrabold text-[#5d3a1a]">Join Layam</h1>
+          <img
+            src="/dog-pic.png"
+            alt="Vallu mascot"
+            className="logo-dog h-16 w-16 rounded-full border-2 border-[#e5d3b3] bg-[#faf3e7] object-cover"
+          />
+          <h1 className="mt-4 text-2xl font-extrabold text-[#5d3a1a]">Join Vallu</h1>
           <p className="mt-1 text-sm text-[#8a6a4a]">Create your account in seconds</p>
         </div>
 

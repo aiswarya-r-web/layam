@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     phone: { type: String, trim: true },
     role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
+    marketingOptOut: { type: Boolean, default: false },
     addresses: [addressSchema],
   },
   { timestamps: true }

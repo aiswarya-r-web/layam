@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Heart, Plus } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import Rating from './Rating'
+import Spinner from './Spinner'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 
@@ -10,21 +12,28 @@ export default function ProductCard({ product }) {
   const { user } = useAuth()
   const { addToCart, addToWishlist, removeFromWishlist, isWishlisted } = useCart()
   const navigate = useNavigate()
+  const [busy, setBusy] = useState('')
 
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0
   const wished = isWishlisted(product._id)
 
-  const guard = (fn) => (e) => {
+  const guard = (fn, key) => async (e) => {
     e.preventDefault()
     if (!user) return navigate('/login')
-    fn(product._id).catch(() => {})
+    if (busy) return
+    setBusy(key)
+    try {
+      await fn(product._id)
+    } catch {} finally {
+      setBusy('')
+    }
   }
 
   return (
     <Link
-      to={`/products/${product.slug}`}
+      to={`/products/${product._id}`}
       className="group flex flex-col overflow-hidden rounded-[25px] border border-[#e8dcc8]
       bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
@@ -40,14 +49,18 @@ export default function ProductCard({ product }) {
           </span>
         )}
         <button
-          onClick={guard(
-            wished ? removeFromWishlist : addToWishlist
-          )}
+          onClick={guard(wished ? removeFromWishlist : addToWishlist, 'wish')}
+          disabled={Boolean(busy)}
           aria-label="Toggle wishlist"
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center
-          rounded-full bg-white/90 text-[#7a4a21] shadow transition hover:scale-110"
+          rounded-full bg-white/90 text-[#7a4a21] shadow transition hover:scale-110
+          disabled:opacity-50"
         >
-          <Heart size={17} fill={wished ? 'currentColor' : 'none'} />
+          {busy === 'wish' ? (
+            <Spinner className="h-4 w-4 border-[#7a4a21]/30 border-t-[#7a4a21]" />
+          ) : (
+            <Heart size={17} fill={wished ? 'currentColor' : 'none'} />
+          )}
         </button>
       </div>
 
@@ -70,14 +83,14 @@ export default function ProductCard({ product }) {
             )}
           </div>
           <button
-            onClick={guard(addToCart)}
+            onClick={guard(addToCart, 'cart')}
             aria-label="Add to cart"
-            disabled={product.stock < 1}
+            disabled={product.stock < 1 || Boolean(busy)}
             className="flex h-9 w-9 items-center justify-center rounded-full
             bg-[#7a4a21] text-white transition hover:scale-110 hover:bg-[#5f3a19]
             disabled:opacity-40"
           >
-            <Plus size={18} />
+            {busy === 'cart' ? <Spinner /> : <Plus size={18} />}
           </button>
         </div>
         {product.stock < 1 && (

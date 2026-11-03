@@ -3,7 +3,17 @@ import { useSearchParams } from 'react-router-dom'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import api from '../api/axios'
 import ProductCard from '../components/ProductCard'
-import LoadingSpinner from '../components/LoadingSpinner'
+import ProductCardSkeleton from '../components/ProductCardSkeleton'
+import useTypewriter from '../hooks/useTypewriter'
+
+const SEARCH_PHRASES = [
+  'Search treats...',
+  'Search dog food...',
+  'Search toys...',
+  'Search harnesses...',
+  'Search grooming...',
+  'Search beds...',
+]
 
 const SORTS = [
   ['newest', 'Newest'],
@@ -19,6 +29,7 @@ export default function Shop() {
   const [pagination, setPagination] = useState({ total: 0, pages: 1 })
   const [loading, setLoading] = useState(true)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const placeholder = useTypewriter(SEARCH_PHRASES)
 
   const params = {
     search: searchParams.get('search') || '',
@@ -74,7 +85,7 @@ export default function Shop() {
             <input
               value={params.search}
               onChange={(e) => setParam('search', e.target.value)}
-              placeholder="Search treats, toys, food..."
+              placeholder={placeholder}
               className="w-full rounded-full border border-[#e5d3b3] bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[#8a5a2b]"
             />
           </div>
@@ -155,7 +166,11 @@ export default function Shop() {
         {/* GRID */}
         <div>
           {loading ? (
-            <LoadingSpinner />
+            <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
           ) : products.length === 0 ? (
             <div className="rounded-[25px] border border-[#e8dcc8] bg-white p-14 text-center">
               <p className="text-4xl">🐶</p>

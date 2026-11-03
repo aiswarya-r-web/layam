@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { PawPrint } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function Login() {
   const { login } = useAuth()
+  const { toast } = useToast()
   const navigate = useNavigate()
   const location = useLocation()
   const [form, setForm] = useState({ email: '', password: '' })
@@ -16,10 +17,13 @@ export default function Login() {
     setError('')
     setBusy(true)
     try {
-      await login(form.email, form.password)
-      navigate(location.state?.from || '/', { replace: true })
+      const user = await login(form.email, form.password)
+      toast(`Welcome back, ${user.name.split(' ')[0]}!`)
+      navigate(location.state?.from || (user.role === 'admin' ? '/admin' : '/home'), { replace: true })
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed')
+      const message = err.response?.data?.message || 'Login failed'
+      setError(message)
+      toast(message, 'error')
     } finally {
       setBusy(false)
     }
@@ -29,11 +33,13 @@ export default function Login() {
     <main className="flex min-h-[70vh] items-center justify-center px-6 py-12">
       <div className="w-full max-w-md rounded-[30px] border border-[#e8dcc8] bg-white p-8 shadow-xl">
         <div className="flex flex-col items-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-[#faf3e7] text-[#8a5a2b]">
-            <PawPrint size={28} fill="currentColor" />
-          </div>
+          <img
+            src="/dog-pic.png"
+            alt="Vallu mascot"
+            className="logo-dog h-16 w-16 rounded-full border-2 border-[#e5d3b3] bg-[#faf3e7] object-cover"
+          />
           <h1 className="mt-4 text-2xl font-extrabold text-[#5d3a1a]">Welcome back</h1>
-          <p className="mt-1 text-sm text-[#8a6a4a]">Log in to your Layam account</p>
+          <p className="mt-1 text-sm text-[#8a6a4a]">Log in to your Vallu account</p>
         </div>
 
         {error && (
@@ -74,7 +80,7 @@ export default function Login() {
         </form>
 
         <p className="mt-5 text-center text-sm text-[#8a6a4a]">
-          New to Layam?{' '}
+          New to Vallu?{' '}
           <Link to="/signup" className="font-bold text-[#7a4a21] hover:underline">
             Create an account
           </Link>

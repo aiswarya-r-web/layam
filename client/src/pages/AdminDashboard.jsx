@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import api from '../api/axios'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -12,6 +13,11 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState([])
   const [products, setProducts] = useState([])
   const [users, setUsers] = useState([])
+  const [coupons, setCoupons] = useState([])
+  const [couponForm, setCouponForm] = useState({
+    code: '', discountType: 'percentage', discountValue: '',
+    minimumOrderAmount: 0, maximumDiscount: '', expiryDate: '', usageLimit: '',
+  })
   const [msg, setMsg] = useState('')
 
   useEffect(() => {
@@ -19,7 +25,40 @@ export default function AdminDashboard() {
     api.get('/admin/orders').then((r) => setOrders(r.data.orders)).catch(() => {})
     api.get('/admin/products').then((r) => setProducts(r.data.products)).catch(() => {})
     api.get('/admin/users').then((r) => setUsers(r.data.users)).catch(() => {})
+    api.get('/coupons').then((r) => setCoupons(r.data.coupons)).catch(() => {})
   }, [])
+
+  const saveCoupon = async (e) => {
+    e.preventDefault()
+    try {
+      const r = await api.post('/coupons', {
+        ...couponForm,
+        discountValue: Number(couponForm.discountValue),
+        minimumOrderAmount: Number(couponForm.minimumOrderAmount) || 0,
+        maximumDiscount: couponForm.maximumDiscount ? Number(couponForm.maximumDiscount) : undefined,
+        usageLimit: couponForm.usageLimit ? Number(couponForm.usageLimit) : undefined,
+      })
+      setCoupons((cs) => [r.data.coupon, ...cs])
+      setCouponForm({ code: '', discountType: 'percentage', discountValue: '', minimumOrderAmount: 0, maximumDiscount: '', expiryDate: '', usageLimit: '' })
+      setMsg('')
+    } catch (err) {
+      setMsg(err.response?.data?.message || 'Could not create coupon')
+    }
+  }
+
+  const toggleCoupon = async (c) => {
+    try {
+      const r = await api.put(`/coupons/${c._id}`, { isActive: !c.isActive })
+      setCoupons((cs) => cs.map((x) => (x._id === c._id ? r.data.coupon : x)))
+    } catch {}
+  }
+
+  const deleteCoupon = async (id) => {
+    try {
+      await api.delete(`/coupons/${id}`)
+      setCoupons((cs) => cs.filter((c) => c._id !== id))
+    } catch {}
+  }
 
   const setStatus = async (id, orderStatus) => {
     try {
@@ -51,11 +90,20 @@ export default function AdminDashboard() {
     ['orders', `Orders (${orders.length})`],
     ['products', `Products (${products.length})`],
     ['customers', `Customers (${users.length})`],
+    ['coupons', `Coupons (${coupons.length})`],
   ]
 
   return (
     <main className="mx-auto max-w-[1400px] px-6 py-10 md:px-14">
-      <h1 className="text-3xl font-extrabold text-[#5d3a1a]">Admin Dashboard</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-extrabold text-[#5d3a1a]">Admin Dashboard</h1>
+        <Link
+          to="/admin/birthdays"
+          className="rounded-full border-b-4 border-[#b8801f] bg-gradient-to-b from-[#f2cf8b] to-[#dda044] px-5 py-2.5 text-sm font-bold text-[#5d3a1a] shadow transition hover:-translate-y-0.5"
+        >
+          🎂 Paw Birthday Club
+        </Link>
+      </div>
 
       <div className="mt-6 flex gap-2 overflow-x-auto">
         {tabs.map(([k, l]) => (
@@ -155,6 +203,73 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {tab === 'coupons' && (
+        <div className="mt-8 grid gap-6 lg:grid-cols-[340px_1fr]">
+          <form onSubmit={saveCoupon} className="h-fit rounded-[20px] border border-[#e8dcc8] bg-white p-5">
+            <h3 className="font-bold text-[#5d3a1a]">New coupon</h3>
+            <div className="mt-3 space-y-3">
+              <input required placeholder="CODE e.g. PAW10" value={couponForm.code}
+                onChange={(e) => setCouponForm({ ...couponForm, code: e.target.value.toUpperCase() })}
+                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm uppercase outline-none" />
+              <div className="flex gap-2">
+                <select value={couponForm.discountType}
+                  onChange={(e) => setCouponForm({ ...couponForm, discountType: e.target.value })}
+                  className="w-1/2 rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none">
+                  <option value="percentage">% off</option>
+                  <option value="fixed">₹ off</option>
+                </select>
+                <input required type="number" min="1" placeholder="Value" value={couponForm.discountValue}
+                  onChange={(e) => setCouponForm({ ...couponForm, discountValue: e.target.value })}
+                  className="w-1/2 rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+              </div>
+              <input type="number" min="0" placeholder="Min order ₹ (0 = none)" value={couponForm.minimumOrderAmount}
+                onChange={(e) => setCouponForm({ ...couponForm, minimumOrderAmount: e.target.value })}
+                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+              <input type="number" min="0" placeholder="Max discount ₹ (optional)" value={couponForm.maximumDiscount}
+                onChange={(e) => setCouponForm({ ...couponForm, maximumDiscount: e.target.value })}
+                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+              <input required type="date" value={couponForm.expiryDate}
+                onChange={(e) => setCouponForm({ ...couponForm, expiryDate: e.target.value })}
+                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+              <input type="number" min="1" placeholder="Usage limit (optional)" value={couponForm.usageLimit}
+                onChange={(e) => setCouponForm({ ...couponForm, usageLimit: e.target.value })}
+                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+            </div>
+            <button className="mt-4 w-full rounded-full bg-[#7a4a21] py-2.5 font-bold text-white transition hover:bg-[#5f3a19]">
+              Create coupon
+            </button>
+          </form>
+
+          <div className="overflow-x-auto rounded-[20px] border border-[#e8dcc8] bg-white">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="border-b border-[#e8dcc8] text-[#8a6a4a]">
+                <tr><th className="p-4">Code</th><th className="p-4">Discount</th><th className="p-4">Min order</th><th className="p-4">Expiry</th><th className="p-4">Used</th><th className="p-4">Status</th><th className="p-4" /></tr>
+              </thead>
+              <tbody>
+                {coupons.map((c) => (
+                  <tr key={c._id} className="border-b border-[#f1e6d2]">
+                    <td className="p-4 font-bold">{c.code}</td>
+                    <td className="p-4">{c.discountType === 'percentage' ? `${c.discountValue}%` : inr(c.discountValue)}</td>
+                    <td className="p-4">{c.minimumOrderAmount ? inr(c.minimumOrderAmount) : '—'}</td>
+                    <td className="p-4">{new Date(c.expiryDate).toLocaleDateString('en-IN')}</td>
+                    <td className="p-4">{c.usedCount}{c.usageLimit ? `/${c.usageLimit}` : ''}</td>
+                    <td className="p-4">
+                      <button onClick={() => toggleCoupon(c)} className={`rounded-full px-3 py-1 text-xs font-bold ${c.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
+                        {c.isActive ? 'Active' : 'Inactive'}
+                      </button>
+                    </td>
+                    <td className="p-4">
+                      <button onClick={() => deleteCoupon(c._id)} className="text-xs font-bold text-red-500 hover:underline">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {coupons.length === 0 && <p className="p-8 text-center text-[#8a6a4a]">No coupons yet</p>}
+          </div>
         </div>
       )}
 

@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { Heart, Menu, PawPrint, ShoppingCart, User, X } from 'lucide-react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Heart, Menu, ShoppingCart, User, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import { useToast } from '../context/ToastContext'
 
-const links = [
-  { to: '/', label: 'Home' },
+const links = (user) => [
+  { to: user ? '/home' : '/', label: 'Home' },
   { to: '/shop', label: 'Shop' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
@@ -23,8 +24,17 @@ function Badge({ n }) {
 export default function Navbar() {
   const { user, logout } = useAuth()
   const { cartCount, wishlist } = useCart()
+  const { toast } = useToast()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(false)
+
+  const handleLogout = () => {
+    setMenu(false)
+    logout()
+    toast('Logged out', 'info')
+    navigate('/', { replace: true })
+  }
 
   const navCls = ({ isActive }) =>
     `transition hover:text-[#8a5a2b] ${isActive ? 'font-bold text-[#7a4a21]' : ''}`
@@ -32,17 +42,19 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-40 flex h-[82px] items-center justify-between border-b border-[#e8dcc8] bg-[#fdf9f0]/95 px-6 backdrop-blur md:px-14 lg:px-20">
       <Link to="/" className="flex items-center gap-2">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-white text-[#8a5a2b]">
-          <PawPrint size={23} fill="currentColor" />
-        </div>
+        <img
+          src="/dog-pic.png"
+          alt="Vallu mascot"
+          className="logo-dog h-12 w-12 rounded-full border-2 border-[#e5d3b3] bg-white object-cover"
+        />
         <span className="text-2xl font-extrabold tracking-tight">
-          LAYAM<span className="text-[#8a5a2b]">.</span>
+          Vallu<span className="text-[#8a5a2b]">.</span>
         </span>
       </Link>
 
       <div className="hidden items-center gap-10 text-[16px] font-medium lg:flex">
-        {links.map((l) => (
-          <NavLink key={l.to} to={l.to} className={navCls} end={l.to === '/'}>
+        {links(user).map((l) => (
+          <NavLink key={l.to} to={l.to} className={navCls} end={l.to === '/' || l.to === '/home'}>
             {l.label}
           </NavLink>
         ))}
@@ -95,10 +107,7 @@ export default function Navbar() {
                     </Link>
                   ))}
                   <button
-                    onClick={() => {
-                      setMenu(false)
-                      logout()
-                    }}
+                    onClick={handleLogout}
                     className="block w-full px-4 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
                   >
                     Log out
@@ -130,11 +139,11 @@ export default function Navbar() {
 
       {open && (
         <div className="absolute left-0 right-0 top-full border-b border-[#e8dcc8] bg-[#fdf9f0] px-6 py-4 shadow-lg lg:hidden">
-          {links.map((l) => (
+          {links(user).map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
-              end={l.to === '/'}
+              end={l.to === '/' || l.to === '/home'}
               onClick={() => setOpen(false)}
               className="block py-2 font-medium"
             >

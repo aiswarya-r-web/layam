@@ -7,13 +7,15 @@ export default function About() {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-white text-[#8a5a2b]">
           <PawPrint size={30} fill="currentColor" />
         </div>
-        <h1 className="mt-5 text-4xl font-extrabold text-[#5d3a1a]">About Layam</h1>
+        <h1 className="mt-5 text-4xl font-extrabold text-[#5d3a1a]">About Vallu
+          
+        </h1>
         <p className="mt-3 text-lg text-[#8a6a4a]">Every Tail Deserves a Little Extra Love.</p>
       </div>
 
       <div className="mt-10 space-y-6 rounded-[30px] border border-[#e8dcc8] bg-white p-8 leading-relaxed text-[#6b553f]">
         <p>
-          Layam started with a simple belief: our dogs give us their whole hearts,
+          Vallu started with a simple belief: our dogs give us their whole hearts,
           so they deserve the very best in return. We curate premium food, treats,
           toys and care essentials — everything your furry friend needs to live a
           happy, healthy life.
