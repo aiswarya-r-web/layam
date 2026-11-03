@@ -15,8 +15,8 @@ export default function Breadcrumbs() {
   const segments = pathname.split('/').filter(Boolean)
 
   return (
-    <nav className="flex w-full items-center gap-1.5 border-b border-[#f1e6d2] bg-[#fdf9f0] px-6 py-2.5 text-sm md:px-14" aria-label="Breadcrumb">
-      <Link to="/home" className="flex items-center gap-1 font-semibold text-[#8a6a4a] transition hover:text-[#7a4a21]">
+    <nav className="flex w-full items-center gap-1.5 border-b border-[var(--cream)] bg-[var(--card)] px-6 py-2.5 text-sm md:px-14" aria-label="Breadcrumb">
+      <Link to="/home" className="flex items-center gap-1 font-semibold text-[var(--muted)] transition hover:text-[var(--brand)]">
         <PawPrint size={14} /> Home
       </Link>
       {segments.map((seg, i) => {
@@ -25,11 +25,11 @@ export default function Breadcrumbs() {
         const label = NAMES[seg] || (seg.length > 12 ? `#${seg.slice(-6).toUpperCase()}` : seg)
         return (
           <span key={to} className="flex items-center gap-1.5">
-            <ChevronRight size={14} className="text-[#c9a87c]" />
+            <ChevronRight size={14} className="text-[var(--tan)]" />
             {last ? (
-              <span className="font-bold text-[#7a4a21]">{label}</span>
+              <span className="font-bold text-[var(--brand)]">{label}</span>
             ) : (
-              <Link to={to} className="font-semibold text-[#8a6a4a] transition hover:text-[#7a4a21]">
+              <Link to={to} className="font-semibold text-[var(--muted)] transition hover:text-[var(--brand)]">
                 {label}
               </Link>
             )}

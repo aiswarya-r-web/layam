@@ -14,7 +14,7 @@ export default function VaaluCommunity() {
           className="text-center lg:text-left"
         >
           <div className="flex items-center justify-center gap-2 lg:justify-start">
-            <h2 className="text-2xl font-black leading-tight text-[#5d3a1a] md:text-3xl">
+            <h2 className="text-2xl font-black leading-tight text-[var(--ink)] md:text-3xl">
               The VAALU
               <br />
               Community
@@ -23,10 +23,10 @@ export default function VaaluCommunity() {
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <Heart size={27} fill="#a0522d" className="text-[#a0522d]" />
+              <Heart size={27} fill="var(--rust)" className="text-[var(--rust)]" />
             </motion.div>
           </div>
-          <p className="mt-3 text-sm leading-relaxed text-[#6b553f]">
+          <p className="mt-3 text-sm leading-relaxed text-[var(--muted-dark)]">
             Real pets. Real stories.
             <br />
             A happier & healthier
@@ -54,7 +54,7 @@ export default function VaaluCommunity() {
           <motion.span
             animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.2, 1] }}
             transition={{ duration: 3, repeat: Infinity }}
-            className="absolute -right-2 top-0 text-3xl text-[#a0522d]"
+            className="absolute -right-2 top-0 text-3xl text-[var(--rust)]"
           >
             ✳
           </motion.span>
@@ -67,18 +67,18 @@ export default function VaaluCommunity() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           whileHover={{ y: -5 }}
-          className="rounded-[30px] border border-[#e8dcc8] bg-gradient-to-br from-[#fdf3e3] to-[#f7ead6] p-5 shadow-sm"
+          className="rounded-[30px] border border-[var(--line)] bg-gradient-to-br from-[var(--card-2)] to-[var(--cream-3)] p-5 shadow-sm"
         >
           <div className="flex items-center justify-between">
-            <Quote size={30} fill="#a0522d" className="text-[#a0522d]" />
-            <div className="flex gap-0.5 text-[#dda044]">
+            <Quote size={30} fill="var(--rust)" className="text-[var(--rust)]" />
+            <div className="flex gap-0.5 text-[var(--gold)]">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star key={star} size={16} fill="currentColor" strokeWidth={1} />
               ))}
             </div>
           </div>
 
-          <p className="mt-2 text-sm italic leading-relaxed text-[#6b553f]">
+          <p className="mt-2 text-sm italic leading-relaxed text-[var(--muted-dark)]">
             "VAALU always has the best quality products for my Bruno.
             The toys are super durable and he absolutely loves them!"
           </p>
@@ -90,8 +90,8 @@ export default function VaaluCommunity() {
               className="h-10 w-10 rounded-full border-2 border-white object-cover"
             />
             <div>
-              <h4 className="text-sm font-bold text-[#5d3a1a]">Ananya S.</h4>
-              <p className="text-xs text-[#8a6a4a]">Pet Parent</p>
+              <h4 className="text-sm font-bold text-[var(--ink)]">Ananya S.</h4>
+              <p className="text-xs text-[var(--muted)]">Pet Parent</p>
             </div>
           </div>
         </motion.div>

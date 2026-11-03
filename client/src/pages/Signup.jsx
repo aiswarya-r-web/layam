@@ -43,15 +43,15 @@ export default function Signup() {
 
   return (
     <main className="flex min-h-[70vh] items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md rounded-[30px] border border-[#e8dcc8] bg-white p-8 shadow-xl">
+      <div className="w-full max-w-md rounded-[30px] border border-[var(--line)] bg-white p-8 shadow-xl">
         <div className="flex flex-col items-center">
           <img
             src="/dog-pic.png"
             alt="Vallu mascot"
-            className="logo-dog h-16 w-16 rounded-full border-2 border-[#e5d3b3] bg-[#faf3e7] object-cover"
+            className="logo-dog h-16 w-16 rounded-full border-2 border-[var(--line-2)] bg-[var(--page)] object-cover"
           />
-          <h1 className="mt-4 text-2xl font-extrabold text-[#5d3a1a]">Join Vallu</h1>
-          <p className="mt-1 text-sm text-[#8a6a4a]">Create your account in seconds</p>
+          <h1 className="mt-4 text-2xl font-extrabold text-[var(--ink)]">Join Vallu</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">Create your account in seconds</p>
         </div>
 
         {error && (
@@ -63,28 +63,28 @@ export default function Signup() {
         <form onSubmit={submit} className="mt-6 space-y-4">
           {fields.map(([key, label, type, ph]) => (
             <div key={key}>
-              <label className="text-sm font-semibold text-[#6b4423]">{label}</label>
+              <label className="text-sm font-semibold text-[var(--label)]">{label}</label>
               <input
                 type={type}
                 required={key !== 'phone'}
                 value={form[key]}
                 onChange={set(key)}
-                className="mt-1 w-full rounded-xl border border-[#e5d3b3] bg-[#faf9f5] px-4 py-3 outline-none transition focus:border-[#8a5a2b]"
+                className="mt-1 w-full rounded-xl border border-[var(--line-2)] bg-[var(--input)] px-4 py-3 outline-none transition focus:border-[var(--accent-dark)]"
                 placeholder={ph}
               />
             </div>
           ))}
           <button
             disabled={busy}
-            className="w-full rounded-full bg-[#7a4a21] py-3.5 font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5f3a19] disabled:opacity-60"
+            className="w-full rounded-full bg-[var(--brand)] py-3.5 font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[var(--brand-dark)] disabled:opacity-60"
           >
             {busy ? 'Creating account...' : 'Sign up'}
           </button>
         </form>
 
-        <p className="mt-5 text-center text-sm text-[#8a6a4a]">
+        <p className="mt-5 text-center text-sm text-[var(--muted)]">
           Already have an account?{' '}
-          <Link to="/login" className="font-bold text-[#7a4a21] hover:underline">
+          <Link to="/login" className="font-bold text-[var(--brand)] hover:underline">
             Log in
           </Link>
         </p>

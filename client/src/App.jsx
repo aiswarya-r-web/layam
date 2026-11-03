@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { ToastProvider } from './context/ToastContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -32,8 +33,9 @@ export default function App() {
     <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
+          <ThemeProvider>
           <CartProvider>
-          <div className="flex min-h-screen flex-col bg-[#faf3e7] text-[#382619]">
+          <div className="flex min-h-screen flex-col bg-[var(--page)] text-[var(--text)]">
             <Navbar />
             <Breadcrumbs />
             <div className="flex-1">
@@ -63,6 +65,7 @@ export default function App() {
             <PawAssistant />
           </div>
           </CartProvider>
+          </ThemeProvider>
         </AuthProvider>
       </ToastProvider>
     </BrowserRouter>

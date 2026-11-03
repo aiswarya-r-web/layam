@@ -6,9 +6,84 @@
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
+}
+
+/* Non-veg theme (default brown palette) */
+:root {
+  --brand: #7a4a21;
+  --brand-dark: #5f3a19;
+  --ink: #5d3a1a;
+  --text: #382619;
+  --accent-dark: #8a5a2b;
+  --muted: #8a6a4a;
+  --muted-dark: #6b553f;
+  --label: #6b4423;
+  --faint: #a08b74;
+  --rust: #a0522d;
+  --gold-dark: #b8801f;
+  --tan: #c9a87c;
+  --sand: #d9c39a;
+  --line: #e8dcc8;
+  --line-2: #e5d3b3;
+  --cream: #f1e6d2;
+  --cream-2: #f1e3cb;
+  --cream-3: #f7ead6;
+  --gold-lite: #f2cf8b;
+  --card: #fdf9f0;
+  --card-2: #fdf3e3;
+  --cream-x: #fff8ed;
+  --gold-x: #fff0c9;
+  --peach: #ffe9d7;
+  --peach-2: #ffe8d2;
+  --page: #faf3e7;
+  --input: #faf9f5;
+  --chip: #faf7f0;
+  --gold: #dda044;
+  --gold-2: #f4b860;
+  --gold-3: #e8c168;
+}
+
+/* Veg theme (green palette) */
+:root[data-theme='veg'] {
+  --brand: #2e7d32;
+  --brand-dark: #1b5e20;
+  --ink: #14532d;
+  --text: #24392a;
+  --accent-dark: #35803d;
+  --muted: #5d7d60;
+  --muted-dark: #435d46;
+  --label: #2f6b38;
+  --faint: #8fa693;
+  --rust: #2f8a3d;
+  --gold-dark: #6b9e3c;
+  --tan: #a9c9ac;
+  --sand: #bcd6bf;
+  --line: #d3e3d5;
+  --line-2: #c4dac7;
+  --cream: #e4efe3;
+  --cream-2: #e6f0e4;
+  --cream-3: #e9f3e3;
+  --gold-lite: #d5e8bc;
+  --card: #f6faf3;
+  --card-2: #f4f9ee;
+  --cream-x: #f1f8ec;
+  --gold-x: #eef6d8;
+  --peach: #eef7ea;
+  --peach-2: #eef7ec;
+  --page: #eef5e8;
+  --input: #f7faf3;
+  --chip: #f3f8ee;
+  --gold: #66bb6a;
+  --gold-2: #81c784;
+  --gold-3: #9ccc65;
 }
 
 @keyframes toast-in {

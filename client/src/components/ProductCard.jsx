@@ -54,17 +54,17 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/products/${product._id}`}
-      className="group flex flex-col overflow-hidden rounded-[25px] border border-[#e8dcc8]
+      className="group flex min-w-0 flex-col overflow-hidden rounded-[25px] border border-[var(--line)]
       bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
-      <div className="relative h-52 overflow-hidden bg-[#faf3e7]">
+      <div className="relative aspect-square overflow-hidden bg-[var(--page)]">
         <img
           src={product.images?.[0]}
           alt={product.name}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
         {discount > 0 && (
-          <span className="absolute left-3 top-3 rounded-full bg-[#7a4a21] px-3 py-1 text-xs font-bold text-white">
+          <span className="absolute left-3 top-3 rounded-full bg-[var(--brand)] px-3 py-1 text-xs font-bold text-white">
             {discount}% OFF
           </span>
         )}
@@ -73,11 +73,11 @@ export default function ProductCard({ product }) {
           disabled={Boolean(busy)}
           aria-label="Toggle wishlist"
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center
-          rounded-full bg-white/90 text-[#7a4a21] shadow transition hover:scale-110
+          rounded-full bg-white/90 text-[var(--brand)] shadow transition hover:scale-110
           disabled:opacity-50"
         >
           {busy === 'wish' ? (
-            <Spinner className="h-4 w-4 border-[#7a4a21]/30 border-t-[#7a4a21]" />
+            <Spinner className="h-4 w-4 border-[var(--brand)]/30 border-t-[var(--brand)]" />
           ) : (
             <Heart size={17} fill={wished ? 'currentColor' : 'none'} />
           )}
@@ -86,19 +86,19 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <p className="text-[10px] font-semibold tracking-widest text-[#8a5a2b]">
+        <p className="text-[10px] font-semibold tracking-widest text-[var(--accent-dark)]">
           {product.categoryId?.name?.toUpperCase() || product.brand?.toUpperCase()}
         </p>
-        <h3 className="mt-1 line-clamp-2 text-sm font-bold text-[#382619]">
+        <h3 className="mt-1 line-clamp-2 text-sm font-bold text-[var(--text)]">
           {product.name}
         </h3>
         <Rating value={product.rating} count={product.reviewCount} />
 
-        <div className="mt-2 flex items-center justify-between">
-          <div>
-            <span className="font-extrabold text-[#5d3a1a]">{inr(product.price)}</span>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="font-extrabold text-[var(--ink)]">{inr(product.price)}</span>
             {product.originalPrice > product.price && (
-              <span className="ml-2 text-xs text-[#a08b74] line-through">
+              <span className="ml-2 text-xs text-[var(--faint)] line-through">
                 {inr(product.originalPrice)}
               </span>
             )}
@@ -106,7 +106,7 @@ export default function ProductCard({ product }) {
           {cartItem ? (
             <div
               onClick={(e) => e.preventDefault()}
-              className="flex h-9 items-center rounded-full bg-[#7a4a21] text-white"
+              className="flex h-9 shrink-0 items-center rounded-full bg-[var(--brand)] text-white"
             >
               <button
                 onClick={stepQty(-1)}
@@ -137,8 +137,8 @@ export default function ProductCard({ product }) {
               onClick={guard(addToCart, 'cart')}
               aria-label="Add to cart"
               disabled={product.stock < 1 || Boolean(busy)}
-              className="flex h-9 w-9 items-center justify-center rounded-full
-              bg-[#7a4a21] text-white transition hover:scale-110 hover:bg-[#5f3a19]
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full
+              bg-[var(--brand)] text-white transition hover:scale-110 hover:bg-[var(--brand-dark)]
               disabled:opacity-40"
             >
               {busy === 'cart' ? <Spinner /> : <Plus size={18} />}

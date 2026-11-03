@@ -75,23 +75,23 @@ export default function Shop() {
     <main className="mx-auto max-w-[1400px] px-6 py-10 md:px-14">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-[#5d3a1a]">Shop all products</h1>
-          <p className="mt-1 text-sm text-[#8a6a4a]">{pagination.total} products for your best friend</p>
+          <h1 className="text-3xl font-extrabold text-[var(--ink)]">Shop all products</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">{pagination.total} products for your best friend</p>
         </div>
 
         <div className="flex w-full gap-3 sm:w-auto">
           <div className="relative flex-1 sm:w-72">
-            <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a08b74]" />
+            <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--faint)]" />
             <input
               value={params.search}
               onChange={(e) => setParam('search', e.target.value)}
               placeholder={placeholder}
-              className="w-full rounded-full border border-[#e5d3b3] bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[#8a5a2b]"
+              className="w-full rounded-full border border-[var(--line-2)] bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[var(--accent-dark)]"
             />
           </div>
           <button
             onClick={() => setFiltersOpen((o) => !o)}
-            className="flex items-center gap-2 rounded-full border border-[#e5d3b3] bg-white px-4 py-2 text-sm font-semibold lg:hidden"
+            className="flex items-center gap-2 rounded-full border border-[var(--line-2)] bg-white px-4 py-2 text-sm font-semibold lg:hidden"
           >
             <SlidersHorizontal size={16} /> Filters
           </button>
@@ -102,12 +102,12 @@ export default function Shop() {
         {/* FILTERS */}
         <aside className={`${filtersOpen ? 'block' : 'hidden'} space-y-6 lg:block`}>
           <div>
-            <h3 className="font-bold text-[#5d3a1a]">Category</h3>
+            <h3 className="font-bold text-[var(--ink)]">Category</h3>
             <div className="mt-3 space-y-1.5">
               <button
                 onClick={() => setParam('category', '')}
                 className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition ${
-                  !params.category ? 'bg-[#7a4a21] font-bold text-white' : 'hover:bg-[#f1e6d2]'
+                  !params.category ? 'bg-[var(--brand)] font-bold text-white' : 'hover:bg-[var(--cream)]'
                 }`}
               >
                 All
@@ -117,7 +117,7 @@ export default function Shop() {
                   key={c._id}
                   onClick={() => setParam('category', c.slug)}
                   className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition ${
-                    params.category === c.slug ? 'bg-[#7a4a21] font-bold text-white' : 'hover:bg-[#f1e6d2]'
+                    params.category === c.slug ? 'bg-[var(--brand)] font-bold text-white' : 'hover:bg-[var(--cream)]'
                   }`}
                 >
                   {c.name}
@@ -127,7 +127,7 @@ export default function Shop() {
           </div>
 
           <div>
-            <h3 className="font-bold text-[#5d3a1a]">Price range</h3>
+            <h3 className="font-bold text-[var(--ink)]">Price range</h3>
             <div className="mt-3 flex items-center gap-2">
               <input
                 type="number"
@@ -135,26 +135,26 @@ export default function Shop() {
                 placeholder="Min"
                 value={params.minPrice}
                 onChange={(e) => setParam('minPrice', e.target.value)}
-                className="w-full rounded-lg border border-[#e5d3b3] bg-white px-3 py-2 text-sm outline-none"
+                className="w-full rounded-lg border border-[var(--line-2)] bg-white px-3 py-2 text-sm outline-none"
               />
-              <span className="text-[#a08b74]">–</span>
+              <span className="text-[var(--faint)]">–</span>
               <input
                 type="number"
                 min="0"
                 placeholder="Max"
                 value={params.maxPrice}
                 onChange={(e) => setParam('maxPrice', e.target.value)}
-                className="w-full rounded-lg border border-[#e5d3b3] bg-white px-3 py-2 text-sm outline-none"
+                className="w-full rounded-lg border border-[var(--line-2)] bg-white px-3 py-2 text-sm outline-none"
               />
             </div>
           </div>
 
           <div>
-            <h3 className="font-bold text-[#5d3a1a]">Sort by</h3>
+            <h3 className="font-bold text-[var(--ink)]">Sort by</h3>
             <select
               value={params.sort}
               onChange={(e) => setParam('sort', e.target.value)}
-              className="mt-3 w-full rounded-lg border border-[#e5d3b3] bg-white px-3 py-2 text-sm outline-none"
+              className="mt-3 w-full rounded-lg border border-[var(--line-2)] bg-white px-3 py-2 text-sm outline-none"
             >
               {SORTS.map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
@@ -172,10 +172,10 @@ export default function Shop() {
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="rounded-[25px] border border-[#e8dcc8] bg-white p-14 text-center">
+            <div className="rounded-[25px] border border-[var(--line)] bg-white p-14 text-center">
               <p className="text-4xl">🐶</p>
-              <p className="mt-3 font-bold text-[#5d3a1a]">No products found</p>
-              <p className="mt-1 text-sm text-[#8a6a4a]">Try a different search or filter.</p>
+              <p className="mt-3 font-bold text-[var(--ink)]">No products found</p>
+              <p className="mt-1 text-sm text-[var(--muted)]">Try a different search or filter.</p>
             </div>
           ) : (
             <>
@@ -193,8 +193,8 @@ export default function Shop() {
                       onClick={() => setParam('page', String(n))}
                       className={`h-10 w-10 rounded-full text-sm font-bold transition ${
                         n === page
-                          ? 'bg-[#7a4a21] text-white'
-                          : 'border border-[#e5d3b3] bg-white hover:bg-[#f1e6d2]'
+                          ? 'bg-[var(--brand)] text-white'
+                          : 'border border-[var(--line-2)] bg-white hover:bg-[var(--cream)]'
                       }`}
                     >
                       {n}

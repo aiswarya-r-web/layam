@@ -28,7 +28,7 @@ export default function BirthdayBanner() {
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-      <div className="relative w-full max-w-md overflow-hidden rounded-[30px] border-2 border-[#e5d3b3] bg-[#fff8ed] p-8 text-center shadow-2xl">
+      <div className="relative w-full max-w-md overflow-hidden rounded-[30px] border-2 border-[var(--line-2)] bg-[var(--cream-x)] p-8 text-center shadow-2xl">
         {CONFETTI.map((i) => (
           <span
             key={i}
@@ -36,14 +36,14 @@ export default function BirthdayBanner() {
             style={{
               left: `${(i * 53) % 100}%`,
               animationDelay: `${(i * 0.37) % 3}s`,
-              background: ['#7a4a21', '#dda044', '#e8c168', '#a0522d', '#f2cf8b'][i % 5],
+              background: ['var(--brand)', 'var(--gold)', 'var(--gold-3)', 'var(--rust)', 'var(--gold-lite)'][i % 5],
             }}
           />
         ))}
 
         <button
           onClick={close}
-          className="absolute right-4 top-4 rounded-full p-1.5 text-[#a08b74] transition hover:bg-[#f1e6d2] hover:text-[#5d3a1a]"
+          className="absolute right-4 top-4 rounded-full p-1.5 text-[var(--faint)] transition hover:bg-[var(--cream)] hover:text-[var(--ink)]"
           aria-label="Close"
         >
           <X size={18} />
@@ -52,16 +52,16 @@ export default function BirthdayBanner() {
         <img
           src="/dog-pic.png"
           alt="Vallu mascot"
-          className="logo-dog mx-auto h-24 w-24 rounded-full border-2 border-[#e5d3b3] object-cover"
+          className="logo-dog mx-auto h-24 w-24 rounded-full border-2 border-[var(--line-2)] object-cover"
         />
 
         <div className="mt-4 text-3xl">🎂🎈🐾</div>
 
-        <h2 className="mt-2 text-2xl font-extrabold text-[#5d3a1a]">
+        <h2 className="mt-2 text-2xl font-extrabold text-[var(--ink)]">
           {isToday ? `Happy Birthday, ${pet.name}!` : 'Something Special is Coming!'}
         </h2>
 
-        <p className="mt-3 text-sm leading-relaxed text-[#8a6a4a]">
+        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
           Hey {user.name.split(' ')[0]}!{' '}
           {isToday
             ? `It's ${pet.name}'s big day — the whole VAALU family is celebrating your furry friend today!`
@@ -70,7 +70,7 @@ export default function BirthdayBanner() {
           {isToday ? 'Have a pawsome day! 🐶❤️' : 'Stay excited — a little surprise might be coming your way. 🐶❤️'}
         </p>
 
-        <p className="mt-4 text-xs font-bold tracking-widest text-[#c9a87c]">
+        <p className="mt-4 text-xs font-bold tracking-widest text-[var(--tan)]">
           WITH LOVE, TEAM VAALU
         </p>
       </div>

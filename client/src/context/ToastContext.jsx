@@ -9,7 +9,7 @@ const ICONS = { success: CheckCircle2, error: XCircle, info: Info }
 const COLORS = {
   success: 'text-green-600',
   error: 'text-red-600',
-  info: 'text-[#8a5a2b]',
+  info: 'text-[var(--accent-dark)]',
 }
 
 export function ToastProvider({ children }) {
@@ -37,13 +37,13 @@ export function ToastProvider({ children }) {
           return (
             <div
               key={t.id}
-              className="toast-item pointer-events-auto flex items-center gap-3 rounded-2xl border border-[#e8dcc8] bg-white px-4 py-3 shadow-xl"
+              className="toast-item pointer-events-auto flex items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-4 py-3 shadow-xl"
             >
               <Icon size={20} className={`shrink-0 ${COLORS[t.type]}`} />
-              <p className="flex-1 text-sm font-semibold text-[#382619]">{t.message}</p>
+              <p className="flex-1 text-sm font-semibold text-[var(--text)]">{t.message}</p>
               <button
                 onClick={() => dismiss(t.id)}
-                className="text-[#a08b74] transition hover:text-[#5d3a1a]"
+                className="text-[var(--faint)] transition hover:text-[var(--ink)]"
                 aria-label="Dismiss"
               >
                 <X size={15} />

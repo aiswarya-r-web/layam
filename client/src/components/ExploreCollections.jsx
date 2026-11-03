@@ -7,14 +7,14 @@ const categories = [
     name: 'Food & Treats',
     description: 'Nutritious & tasty picks for a healthy pup.',
     image: '/rope.png',
-    bg: '#FFE8D2',
+    bg: 'var(--peach-2)',
     to: '/shop?category=dog-food',
   },
   {
     name: 'Toys',
     description: 'Fun, durable toys for endless playtime.',
     image: '/dog-toy.png',
-    bg: '#FFF0C9',
+    bg: 'var(--gold-x)',
     to: '/shop?category=toys-playtime',
   },
   {
@@ -28,7 +28,7 @@ const categories = [
     name: 'Accessories',
     description: 'Stylish, comfy & safe everyday essentials.',
     image: '/collar.png',
-    bg: '#FFE9D7',
+    bg: 'var(--peach)',
     to: '/shop?category=collars-leashes',
   },
 ]
@@ -55,14 +55,14 @@ export default function ExploreCollections() {
       <motion.div
         animate={{ y: [0, -15, 0], rotate: [0, 12, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute left-[7%] top-10 text-[#e5d3b3]"
+        className="absolute left-[7%] top-10 text-[var(--line-2)]"
       >
         <PawPrint size={38} fill="currentColor" />
       </motion.div>
       <motion.div
         animate={{ y: [0, 14, 0], rotate: [0, -15, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute right-[8%] top-12 text-[#dda044]"
+        className="absolute right-[8%] top-12 text-[var(--gold)]"
       >
         <PawPrint size={32} fill="currentColor" />
       </motion.div>
@@ -80,9 +80,9 @@ export default function ExploreCollections() {
             animate={{ rotate: [0, -15, 15, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <PawPrint size={30} fill="#a0522d" className="text-[#a0522d]" />
+            <PawPrint size={30} fill="var(--rust)" className="text-[var(--rust)]" />
           </motion.div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-[#5d3a1a] md:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-[var(--ink)] md:text-4xl">
             Explore Our Collections
           </h2>
         </div>
@@ -91,7 +91,7 @@ export default function ExploreCollections() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-2 text-sm text-[#8a6a4a] md:text-base"
+          className="mt-2 text-sm text-[var(--muted)] md:text-base"
         >
           Everything your dog needs, in one happy place.
         </motion.p>
@@ -117,7 +117,7 @@ export default function ExploreCollections() {
             <motion.span
               animate={{ rotate: [0, 90, 180, 270, 360], scale: [1, 1.2, 1] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-              className="absolute right-6 top-5 text-2xl text-[#a0522d]"
+              className="absolute right-6 top-5 text-2xl text-[var(--rust)]"
             >
               ✳
             </motion.span>
@@ -136,8 +136,8 @@ export default function ExploreCollections() {
               />
             </motion.div>
 
-            <h3 className="text-xl font-extrabold text-[#5d3a1a]">{category.name}</h3>
-            <p className="mt-1 max-w-[190px] text-sm leading-5 text-[#6b553f]">
+            <h3 className="text-xl font-extrabold text-[var(--ink)]">{category.name}</h3>
+            <p className="mt-1 max-w-[190px] text-sm leading-5 text-[var(--muted-dark)]">
               {category.description}
             </p>
 
@@ -145,7 +145,7 @@ export default function ExploreCollections() {
               <Link
                 to={category.to}
                 aria-label={`Explore ${category.name}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#7a4a21] text-white shadow-md transition-transform hover:scale-110"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand)] text-white shadow-md transition-transform hover:scale-110"
               >
                 <ArrowRight size={18} />
               </Link>
@@ -154,7 +154,7 @@ export default function ExploreCollections() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileHover={{ opacity: 0.15, y: 0 }}
-              className="pointer-events-none absolute -bottom-3 -left-3 text-[#7a4a21]"
+              className="pointer-events-none absolute -bottom-3 -left-3 text-[var(--brand)]"
             >
               <PawPrint size={65} fill="currentColor" />
             </motion.div>

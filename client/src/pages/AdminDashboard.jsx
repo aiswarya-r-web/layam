@@ -96,10 +96,10 @@ export default function AdminDashboard() {
   return (
     <main className="mx-auto max-w-[1400px] px-6 py-10 md:px-14">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold text-[#5d3a1a]">Admin Dashboard</h1>
+        <h1 className="text-3xl font-extrabold text-[var(--ink)]">Admin Dashboard</h1>
         <Link
           to="/admin/birthdays"
-          className="rounded-full border-b-4 border-[#b8801f] bg-gradient-to-b from-[#f2cf8b] to-[#dda044] px-5 py-2.5 text-sm font-bold text-[#5d3a1a] shadow transition hover:-translate-y-0.5"
+          className="rounded-full border-b-4 border-[var(--gold-dark)] bg-gradient-to-b from-[var(--gold-lite)] to-[var(--gold)] px-5 py-2.5 text-sm font-bold text-[var(--ink)] shadow transition hover:-translate-y-0.5"
         >
           🎂 Paw Birthday Club
         </Link>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
             key={k}
             onClick={() => setTab(k)}
             className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-bold transition ${
-              tab === k ? 'bg-[#7a4a21] text-white' : 'border border-[#e5d3b3] bg-white hover:bg-[#f1e6d2]'
+              tab === k ? 'bg-[var(--brand)] text-white' : 'border border-[var(--line-2)] bg-white hover:bg-[var(--cream)]'
             }`}
           >
             {l}
@@ -123,9 +123,9 @@ export default function AdminDashboard() {
       {tab === 'overview' && (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map(([label, value]) => (
-            <div key={label} className="rounded-[20px] border border-[#e8dcc8] bg-white p-6">
-              <p className="text-sm text-[#8a6a4a]">{label}</p>
-              <p className="mt-1 text-3xl font-extrabold text-[#5d3a1a]">{value}</p>
+            <div key={label} className="rounded-[20px] border border-[var(--line)] bg-white p-6">
+              <p className="text-sm text-[var(--muted)]">{label}</p>
+              <p className="mt-1 text-3xl font-extrabold text-[var(--ink)]">{value}</p>
             </div>
           ))}
           {stats.lowStock?.length > 0 && (
@@ -142,9 +142,9 @@ export default function AdminDashboard() {
       )}
 
       {tab === 'orders' && (
-        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[#e8dcc8] bg-white">
+        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[var(--line)] bg-white">
           <table className="w-full min-w-[700px] text-left text-sm">
-            <thead className="border-b border-[#e8dcc8] text-[#8a6a4a]">
+            <thead className="border-b border-[var(--line)] text-[var(--muted)]">
               <tr>
                 <th className="p-4">Order</th><th className="p-4">Customer</th>
                 <th className="p-4">Total</th><th className="p-4">Status</th>
@@ -152,15 +152,15 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {orders.map((o) => (
-                <tr key={o._id} className="border-b border-[#f1e6d2]">
+                <tr key={o._id} className="border-b border-[var(--cream)]">
                   <td className="p-4 font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</td>
-                  <td className="p-4">{o.userId?.name}<br /><span className="text-xs text-[#a08b74]">{o.userId?.email}</span></td>
+                  <td className="p-4">{o.userId?.name}<br /><span className="text-xs text-[var(--faint)]">{o.userId?.email}</span></td>
                   <td className="p-4 font-bold">{inr(o.totalAmount)}</td>
                   <td className="p-4">
                     <select
                       value={o.orderStatus}
                       onChange={(e) => setStatus(o._id, e.target.value)}
-                      className="rounded-lg border border-[#e5d3b3] bg-white px-2 py-1.5 capitalize outline-none"
+                      className="rounded-lg border border-[var(--line-2)] bg-white px-2 py-1.5 capitalize outline-none"
                     >
                       {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -169,14 +169,14 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
-          {orders.length === 0 && <p className="p-8 text-center text-[#8a6a4a]">No orders yet</p>}
+          {orders.length === 0 && <p className="p-8 text-center text-[var(--muted)]">No orders yet</p>}
         </div>
       )}
 
       {tab === 'products' && (
-        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[#e8dcc8] bg-white">
+        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[var(--line)] bg-white">
           <table className="w-full min-w-[700px] text-left text-sm">
-            <thead className="border-b border-[#e8dcc8] text-[#8a6a4a]">
+            <thead className="border-b border-[var(--line)] text-[var(--muted)]">
               <tr>
                 <th className="p-4">Product</th><th className="p-4">Category</th>
                 <th className="p-4">Price</th><th className="p-4">Stock</th><th className="p-4">Active</th>
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p._id} className="border-b border-[#f1e6d2]">
+                <tr key={p._id} className="border-b border-[var(--cream)]">
                   <td className="p-4 font-semibold">{p.name}</td>
                   <td className="p-4">{p.categoryId?.name}</td>
                   <td className="p-4">{inr(p.price)}</td>
@@ -208,49 +208,49 @@ export default function AdminDashboard() {
 
       {tab === 'coupons' && (
         <div className="mt-8 grid gap-6 lg:grid-cols-[340px_1fr]">
-          <form onSubmit={saveCoupon} className="h-fit rounded-[20px] border border-[#e8dcc8] bg-white p-5">
-            <h3 className="font-bold text-[#5d3a1a]">New coupon</h3>
+          <form onSubmit={saveCoupon} className="h-fit rounded-[20px] border border-[var(--line)] bg-white p-5">
+            <h3 className="font-bold text-[var(--ink)]">New coupon</h3>
             <div className="mt-3 space-y-3">
               <input required placeholder="CODE e.g. PAW10" value={couponForm.code}
                 onChange={(e) => setCouponForm({ ...couponForm, code: e.target.value.toUpperCase() })}
-                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm uppercase outline-none" />
+                className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm uppercase outline-none" />
               <div className="flex gap-2">
                 <select value={couponForm.discountType}
                   onChange={(e) => setCouponForm({ ...couponForm, discountType: e.target.value })}
-                  className="w-1/2 rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none">
+                  className="w-1/2 rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none">
                   <option value="percentage">% off</option>
                   <option value="fixed">₹ off</option>
                 </select>
                 <input required type="number" min="1" placeholder="Value" value={couponForm.discountValue}
                   onChange={(e) => setCouponForm({ ...couponForm, discountValue: e.target.value })}
-                  className="w-1/2 rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+                  className="w-1/2 rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
               </div>
               <input type="number" min="0" placeholder="Min order ₹ (0 = none)" value={couponForm.minimumOrderAmount}
                 onChange={(e) => setCouponForm({ ...couponForm, minimumOrderAmount: e.target.value })}
-                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+                className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
               <input type="number" min="0" placeholder="Max discount ₹ (optional)" value={couponForm.maximumDiscount}
                 onChange={(e) => setCouponForm({ ...couponForm, maximumDiscount: e.target.value })}
-                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+                className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
               <input required type="date" value={couponForm.expiryDate}
                 onChange={(e) => setCouponForm({ ...couponForm, expiryDate: e.target.value })}
-                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+                className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
               <input type="number" min="1" placeholder="Usage limit (optional)" value={couponForm.usageLimit}
                 onChange={(e) => setCouponForm({ ...couponForm, usageLimit: e.target.value })}
-                className="w-full rounded-xl border border-[#e5d3b3] bg-white px-3 py-2.5 text-sm outline-none" />
+                className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
             </div>
-            <button className="mt-4 w-full rounded-full bg-[#7a4a21] py-2.5 font-bold text-white transition hover:bg-[#5f3a19]">
+            <button className="mt-4 w-full rounded-full bg-[var(--brand)] py-2.5 font-bold text-white transition hover:bg-[var(--brand-dark)]">
               Create coupon
             </button>
           </form>
 
-          <div className="overflow-x-auto rounded-[20px] border border-[#e8dcc8] bg-white">
+          <div className="overflow-x-auto rounded-[20px] border border-[var(--line)] bg-white">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="border-b border-[#e8dcc8] text-[#8a6a4a]">
+              <thead className="border-b border-[var(--line)] text-[var(--muted)]">
                 <tr><th className="p-4">Code</th><th className="p-4">Discount</th><th className="p-4">Min order</th><th className="p-4">Expiry</th><th className="p-4">Used</th><th className="p-4">Status</th><th className="p-4" /></tr>
               </thead>
               <tbody>
                 {coupons.map((c) => (
-                  <tr key={c._id} className="border-b border-[#f1e6d2]">
+                  <tr key={c._id} className="border-b border-[var(--cream)]">
                     <td className="p-4 font-bold">{c.code}</td>
                     <td className="p-4">{c.discountType === 'percentage' ? `${c.discountValue}%` : inr(c.discountValue)}</td>
                     <td className="p-4">{c.minimumOrderAmount ? inr(c.minimumOrderAmount) : '—'}</td>
@@ -268,20 +268,20 @@ export default function AdminDashboard() {
                 ))}
               </tbody>
             </table>
-            {coupons.length === 0 && <p className="p-8 text-center text-[#8a6a4a]">No coupons yet</p>}
+            {coupons.length === 0 && <p className="p-8 text-center text-[var(--muted)]">No coupons yet</p>}
           </div>
         </div>
       )}
 
       {tab === 'customers' && (
-        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[#e8dcc8] bg-white">
+        <div className="mt-8 overflow-x-auto rounded-[20px] border border-[var(--line)] bg-white">
           <table className="w-full min-w-[600px] text-left text-sm">
-            <thead className="border-b border-[#e8dcc8] text-[#8a6a4a]">
+            <thead className="border-b border-[var(--line)] text-[var(--muted)]">
               <tr><th className="p-4">Name</th><th className="p-4">Email</th><th className="p-4">Role</th><th className="p-4">Joined</th></tr>
             </thead>
             <tbody>
               {users.map((u) => (
-                <tr key={u._id} className="border-b border-[#f1e6d2]">
+                <tr key={u._id} className="border-b border-[var(--cream)]">
                   <td className="p-4 font-semibold">{u.name}</td>
                   <td className="p-4">{u.email}</td>
                   <td className="p-4 capitalize">{u.role}</td>

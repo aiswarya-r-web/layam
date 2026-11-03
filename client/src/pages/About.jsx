@@ -4,16 +4,16 @@ export default function About() {
   return (
     <main className="mx-auto max-w-[900px] px-6 py-14 md:px-14">
       <div className="text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#e5d3b3] bg-white text-[#8a5a2b]">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--line-2)] bg-white text-[var(--accent-dark)]">
           <PawPrint size={30} fill="currentColor" />
         </div>
-        <h1 className="mt-5 text-4xl font-extrabold text-[#5d3a1a]">About Vallu
+        <h1 className="mt-5 text-4xl font-extrabold text-[var(--ink)]">About Vallu
           
         </h1>
-        <p className="mt-3 text-lg text-[#8a6a4a]">Every Tail Deserves a Little Extra Love.</p>
+        <p className="mt-3 text-lg text-[var(--muted)]">Every Tail Deserves a Little Extra Love.</p>
       </div>
 
-      <div className="mt-10 space-y-6 rounded-[30px] border border-[#e8dcc8] bg-white p-8 leading-relaxed text-[#6b553f]">
+      <div className="mt-10 space-y-6 rounded-[30px] border border-[var(--line)] bg-white p-8 leading-relaxed text-[var(--muted-dark)]">
         <p>
           Vallu started with a simple belief: our dogs give us their whole hearts,
           so they deserve the very best in return. We curate premium food, treats,
@@ -30,7 +30,7 @@ export default function About() {
           Whether your dog is a tug-of-war champion, a professional napper, or a
           snack connoisseur, we've got something that will make their tail wag.
         </p>
-        <p className="font-bold text-[#7a4a21]">
+        <p className="font-bold text-[var(--brand)]">
           <Heart size={15} fill="currentColor" className="mr-1 inline" />
           Happy pets, happy hearts.
         </p>

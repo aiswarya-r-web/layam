@@ -45,8 +45,8 @@ export default function OrderDetails() {
     <main className="mx-auto max-w-[1000px] px-6 py-10 md:px-14">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-extrabold text-[#5d3a1a]">Order #{order._id.slice(-8).toUpperCase()}</h1>
-          <p className="mt-1 text-sm text-[#8a6a4a]">
+          <h1 className="text-3xl font-extrabold text-[var(--ink)]">Order #{order._id.slice(-8).toUpperCase()}</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">
             Placed on {new Date(order.createdAt).toLocaleString('en-IN')}
           </p>
         </div>
@@ -64,26 +64,26 @@ export default function OrderDetails() {
           )}
         </div>
       </div>
-      {msg && <p className="mt-3 rounded-xl bg-[#faf3e7] px-4 py-2 text-sm font-semibold text-[#7a4a21]">{msg}</p>}
+      {msg && <p className="mt-3 rounded-xl bg-[var(--page)] px-4 py-2 text-sm font-semibold text-[var(--brand)]">{msg}</p>}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
         <div className="space-y-4">
           {order.items.map((i) => (
-            <div key={i.productId} className="flex items-center gap-4 rounded-[20px] border border-[#e8dcc8] bg-white p-4">
+            <div key={i.productId} className="flex items-center gap-4 rounded-[20px] border border-[var(--line)] bg-white p-4">
               <img src={i.image} alt={i.productName} className="h-20 w-20 rounded-2xl object-cover" />
               <div className="flex-1">
-                <p className="font-bold text-[#5d3a1a]">{i.productName}</p>
-                <p className="text-sm text-[#8a6a4a]">{inr(i.price)} × {i.quantity}</p>
+                <p className="font-bold text-[var(--ink)]">{i.productName}</p>
+                <p className="text-sm text-[var(--muted)]">{inr(i.price)} × {i.quantity}</p>
               </div>
-              <span className="font-extrabold text-[#5d3a1a]">{inr(i.price * i.quantity)}</span>
+              <span className="font-extrabold text-[var(--ink)]">{inr(i.price * i.quantity)}</span>
             </div>
           ))}
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-[25px] border border-[#e8dcc8] bg-white p-6">
-            <h2 className="font-extrabold text-[#5d3a1a]">Delivery to</h2>
-            <p className="mt-3 text-sm leading-relaxed text-[#6b553f]">
+          <div className="rounded-[25px] border border-[var(--line)] bg-white p-6">
+            <h2 className="font-extrabold text-[var(--ink)]">Delivery to</h2>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--muted-dark)]">
               <span className="font-bold">{a.name}</span><br />
               {a.street}<br />
               {a.city}, {a.state} {a.postalCode}<br />
@@ -92,20 +92,20 @@ export default function OrderDetails() {
             </p>
           </div>
 
-          <div className="rounded-[25px] border border-[#e8dcc8] bg-white p-6">
-            <h2 className="font-extrabold text-[#5d3a1a]">Payment</h2>
+          <div className="rounded-[25px] border border-[var(--line)] bg-white p-6">
+            <h2 className="font-extrabold text-[var(--ink)]">Payment</h2>
             <div className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between text-[#6b553f]"><span>Method</span><span className="uppercase">{order.paymentMethod}</span></div>
-              <div className="flex justify-between text-[#6b553f]"><span>Status</span><span className="capitalize">{order.paymentStatus}</span></div>
-              <div className="flex justify-between text-[#6b553f]"><span>Subtotal</span><span>{inr(order.subtotal)}</span></div>
+              <div className="flex justify-between text-[var(--muted-dark)]"><span>Method</span><span className="uppercase">{order.paymentMethod}</span></div>
+              <div className="flex justify-between text-[var(--muted-dark)]"><span>Status</span><span className="capitalize">{order.paymentStatus}</span></div>
+              <div className="flex justify-between text-[var(--muted-dark)]"><span>Subtotal</span><span>{inr(order.subtotal)}</span></div>
               {order.discount > 0 && (
                 <div className="flex justify-between font-semibold text-green-700">
                   <span>Discount{order.couponCode ? ` (${order.couponCode})` : ''}</span>
                   <span>-{inr(order.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-[#6b553f]"><span>Delivery</span><span>{order.deliveryCharge === 0 ? 'Free' : inr(order.deliveryCharge)}</span></div>
-              <div className="flex justify-between border-t border-[#e8dcc8] pt-3 font-extrabold text-[#5d3a1a]">
+              <div className="flex justify-between text-[var(--muted-dark)]"><span>Delivery</span><span>{order.deliveryCharge === 0 ? 'Free' : inr(order.deliveryCharge)}</span></div>
+              <div className="flex justify-between border-t border-[var(--line)] pt-3 font-extrabold text-[var(--ink)]">
                 <span>Total</span><span>{inr(order.totalAmount)}</span>
               </div>
             </div>

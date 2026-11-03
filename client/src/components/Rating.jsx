@@ -3,7 +3,7 @@ import { Star } from 'lucide-react'
 export default function Rating({ value = 0, count, size = 14 }) {
   return (
     <div className="flex items-center gap-1">
-      <div className="flex gap-0.5 text-[#dda044]">
+      <div className="flex gap-0.5 text-[var(--gold)]">
         {[1, 2, 3, 4, 5].map((s) => (
           <Star
             key={s}
@@ -13,7 +13,7 @@ export default function Rating({ value = 0, count, size = 14 }) {
         ))}
       </div>
       {count !== undefined && (
-        <span className="text-xs text-[#8a6a4a]">({count})</span>
+        <span className="text-xs text-[var(--muted)]">({count})</span>
       )}
     </div>
   )

@@ -16,7 +16,7 @@ export default function PawBurst() {
       key={i}
       size={12 + (i % 3) * 4}
       fill="currentColor"
-      className="paw-particle text-[#dda044]"
+      className="paw-particle text-[var(--gold)]"
       style={{
         left: '50%',
         top: '50%',

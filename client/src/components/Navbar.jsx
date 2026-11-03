@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Heart, Menu, ShoppingCart, User, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import { useTheme } from '../context/ThemeContext'
 import { useToast } from '../context/ToastContext'
 
 const links = (user) => [
@@ -15,7 +16,7 @@ const links = (user) => [
 function Badge({ n }) {
   if (!n) return null
   return (
-    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#7a4a21] text-xs text-white">
+    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-xs text-white">
       {n}
     </span>
   )
@@ -24,6 +25,7 @@ function Badge({ n }) {
 export default function Navbar() {
   const { user, logout } = useAuth()
   const { cartCount, wishlist } = useCart()
+  const { theme, toggleTheme } = useTheme()
   const { toast } = useToast()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -37,18 +39,18 @@ export default function Navbar() {
   }
 
   const navCls = ({ isActive }) =>
-    `transition hover:text-[#8a5a2b] ${isActive ? 'font-bold text-[#7a4a21]' : ''}`
+    `transition hover:text-[var(--accent-dark)] ${isActive ? 'font-bold text-[var(--brand)]' : ''}`
 
   return (
-    <nav className="sticky top-0 z-40 flex h-[82px] items-center justify-between border-b border-[#e8dcc8] bg-[#fdf9f0]/95 px-6 backdrop-blur md:px-14 lg:px-20">
-      <Link to="/" className="flex items-center gap-2">
+    <nav className="sticky top-0 z-40 flex h-[82px] items-center justify-between border-b border-[var(--line)] bg-[var(--card)]/95 px-6 backdrop-blur md:px-14 lg:px-20">
+      <Link to="/" className="flex min-w-0 items-center gap-2">
         <img
           src="/dog-pic.png"
           alt="Vallu mascot"
-          className="logo-dog h-12 w-12 rounded-full border-2 border-[#e5d3b3] bg-white object-cover"
+          className="logo-dog h-12 w-12 shrink-0 rounded-full border-2 border-[var(--line-2)] bg-white object-cover"
         />
-        <span className="text-2xl font-extrabold tracking-tight">
-          Vallu<span className="text-[#8a5a2b]">.</span>
+        <span className="truncate text-2xl font-extrabold tracking-tight">
+          Vallu<span className="text-[var(--accent-dark)]">.</span>
         </span>
       </Link>
 
@@ -65,21 +67,35 @@ export default function Navbar() {
         )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
+        <button
+          onClick={toggleTheme}
+          title={theme === 'veg' ? 'Veg theme — switch to non-veg' : 'Non-veg theme — switch to veg'}
+          aria-label="Toggle veg theme"
+          className="hidden h-7 w-12 items-center rounded-full border border-[var(--line-2)] bg-[var(--input)] px-1 transition hover:bg-[var(--cream)] sm:flex"
+        >
+          <span
+            className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-transform duration-300 ${
+              theme === 'veg' ? 'translate-x-5 border-green-600' : 'translate-x-0 border-[#8b2f2f]'
+            }`}
+          >
+            <span className={`h-2 w-2 rounded-full ${theme === 'veg' ? 'bg-green-600' : 'bg-[#8b2f2f]'}`} />
+          </span>
+        </button>
         {user ? (
           <>
-            <Link to="/wishlist" className="relative rounded-full p-2 transition hover:bg-[#f1e6d2]" aria-label="Wishlist">
+            <Link to="/wishlist" className="relative rounded-full p-2 transition hover:bg-[var(--cream)]" aria-label="Wishlist">
               <Heart size={23} />
               <Badge n={wishlist.length} />
             </Link>
-            <Link to="/cart" className="relative rounded-full p-2 transition hover:bg-[#f1e6d2]" aria-label="Cart">
+            <Link to="/cart" className="relative rounded-full p-2 transition hover:bg-[var(--cream)]" aria-label="Cart">
               <ShoppingCart size={23} />
               <Badge n={cartCount} />
             </Link>
             <div className="relative">
               <button
                 onClick={() => setMenu((m) => !m)}
-                className="flex items-center gap-2 rounded-full px-3 py-2 transition hover:bg-[#f1e6d2]"
+                className="flex items-center gap-2 rounded-full px-3 py-2 transition hover:bg-[var(--cream)]"
               >
                 <User size={21} />
                 <span className="hidden max-w-[100px] truncate text-sm font-semibold sm:inline">
@@ -88,7 +104,7 @@ export default function Navbar() {
               </button>
               {menu && (
                 <div
-                  className="absolute right-0 mt-2 w-44 overflow-hidden rounded-2xl border border-[#e8dcc8] bg-white py-2 shadow-xl"
+                  className="absolute right-0 mt-2 w-44 overflow-hidden rounded-2xl border border-[var(--line)] bg-white py-2 shadow-xl"
                   onMouseLeave={() => setMenu(false)}
                 >
                   {[
@@ -101,7 +117,7 @@ export default function Navbar() {
                       key={to}
                       to={to}
                       onClick={() => setMenu(false)}
-                      className="block px-4 py-2 text-sm transition hover:bg-[#faf3e7] hover:text-[#7a4a21]"
+                      className="block px-4 py-2 text-sm transition hover:bg-[var(--page)] hover:text-[var(--brand)]"
                     >
                       {label}
                     </Link>
@@ -120,13 +136,13 @@ export default function Navbar() {
           <>
             <Link
               to="/login"
-              className="hidden rounded-full px-4 py-2 text-[15px] font-semibold text-[#6b4423] transition hover:bg-[#f1e6d2] sm:inline-flex"
+              className="hidden rounded-full px-4 py-2 text-[15px] font-semibold text-[var(--label)] transition hover:bg-[var(--cream)] sm:inline-flex"
             >
               Log in
             </Link>
             <Link
               to="/signup"
-              className="inline-flex items-center rounded-full bg-[#7a4a21] px-5 py-2.5 text-[15px] font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5f3a19]"
+              className="inline-flex items-center rounded-full bg-[var(--brand)] px-5 py-2.5 text-[15px] font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[var(--brand-dark)]"
             >
               Sign up
             </Link>
@@ -138,7 +154,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full border-b border-[#e8dcc8] bg-[#fdf9f0] px-6 py-4 shadow-lg lg:hidden">
+        <div className="absolute left-0 right-0 top-full border-b border-[var(--line)] bg-[var(--card)] px-6 py-4 shadow-lg lg:hidden">
           {links(user).map((l) => (
             <NavLink
               key={l.to}
@@ -155,6 +171,15 @@ export default function Navbar() {
               Log in
             </NavLink>
           )}
+          <button
+            onClick={toggleTheme}
+            className="mt-2 flex w-full items-center gap-2.5 border-t border-[var(--line)] py-3 font-medium"
+          >
+            <span className={`flex h-4 w-4 items-center justify-center border-2 ${theme === 'veg' ? 'border-green-600' : 'border-[#8b2f2f]'}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${theme === 'veg' ? 'bg-green-600' : 'bg-[#8b2f2f]'}`} />
+            </span>
+            {theme === 'veg' ? 'Veg theme' : 'Non-veg theme'}
+          </button>
         </div>
       )}
     </nav>
