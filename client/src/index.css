@@ -156,6 +156,32 @@ body {
   pointer-events: none;
 }
 
+@keyframes cracker-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1);
+    opacity: 0;
+  }
+}
+
+.cracker-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  box-shadow: 0 0 8px 2px currentColor;
+  animation: cracker-pop 1.9s ease-out infinite;
+  pointer-events: none;
+}
+
 @keyframes paw-burst {
   0% {
     transform: translate(-50%, -50%) scale(0.4) rotate(0deg);

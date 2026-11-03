@@ -5,11 +5,14 @@ import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import { applyCoupon, deliveryChargeFor } from '../utils/pricing.js'
 
-const validateCoupon = async (code, subtotal) => {
+const validateCoupon = async (code, subtotal, userId) => {
   if (!code) return { coupon: null, discount: 0 }
 
   const coupon = await Coupon.findOne({ code: code.toUpperCase(), isActive: true })
   if (!coupon) return { error: 'Invalid coupon code' }
+  if (coupon.userId && coupon.userId.toString() !== userId.toString()) {
+    return { error: 'This coupon is linked to another account' }
+  }
   if (coupon.expiryDate < new Date()) return { error: 'Coupon has expired' }
   if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
     return { error: 'Coupon usage limit reached' }
@@ -65,7 +68,7 @@ export const createOrder = async (req, res) => {
         subtotal += product.price * item.quantity
       }
 
-      const { coupon, discount, error } = await validateCoupon(couponCode, subtotal)
+      const { coupon, discount, error } = await validateCoupon(couponCode, subtotal, req.user._id)
       if (error) throw new Error(error)
 
       const deliveryCharge = deliveryChargeFor(subtotal)

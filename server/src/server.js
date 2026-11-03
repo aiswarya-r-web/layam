@@ -17,6 +17,7 @@ import adminRoutes from './routes/adminRoutes.js'
 import birthdayRoutes from './routes/birthdayRoutes.js'
 import adminBirthdayRoutes from './routes/adminBirthdayRoutes.js'
 import assistantRoutes from './routes/assistantRoutes.js'
+import spinRoutes from './routes/spinRoutes.js'
 import { scheduleBirthdayJob } from './jobs/birthdayJob.js'
 
 dotenv.config()
@@ -44,6 +45,7 @@ app.use('/api/admin', adminRoutes)
 app.use('/api/admin/birthdays', adminBirthdayRoutes)
 app.use('/api/birthday', birthdayRoutes)
 app.use('/api/assistant', assistantRoutes)
+app.use('/api/spin', spinRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

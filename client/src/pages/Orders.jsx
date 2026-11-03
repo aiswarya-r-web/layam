@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -15,6 +15,7 @@ const STATUS_COLORS = {
 
 export default function Orders() {
   const [orders, setOrders] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     api.get('/orders/my-orders').then((r) => setOrders(r.data.orders)).catch(() => setOrders([]))
@@ -60,6 +61,14 @@ export default function Orders() {
                 <span className="font-extrabold text-[var(--ink)]">{inr(o.totalAmount)}</span>
               </div>
             </div>
+            {o.orderStatus === 'delivered' && (
+              <button
+                onClick={(e) => { e.preventDefault(); navigate(`/orders/${o._id}/spin`) }}
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full border-b-2 border-[var(--gold-dark)] bg-gradient-to-b from-[var(--gold-lite)] to-[var(--gold)] px-4 py-1.5 text-xs font-extrabold text-[var(--ink)] shadow transition hover:-translate-y-0.5"
+              >
+                🎡 Spin &amp; Win
+              </button>
+            )}
             <div className="mt-3 flex gap-2">
               {o.items.slice(0, 4).map((i) => (
                 <img key={i.productId} src={i.image} alt={i.productName} className="h-12 w-12 rounded-xl border border-[var(--line)] object-cover" />

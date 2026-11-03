@@ -21,6 +21,7 @@ const couponSchema = new mongoose.Schema(
     usageLimit: { type: Number, min: 1 },
     usedCount: { type: Number, default: 0, min: 0 },
     isActive: { type: Boolean, default: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
   { timestamps: true }
 )

@@ -7,6 +7,9 @@ export const validateCoupon = async (req, res) => {
 
   const coupon = await Coupon.findOne({ code: code.toUpperCase(), isActive: true })
   if (!coupon) return res.status(404).json({ message: 'Invalid coupon code' })
+  if (coupon.userId && coupon.userId.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message: 'This coupon is linked to another account' })
+  }
   if (coupon.expiryDate < new Date()) {
     return res.status(400).json({ message: 'Coupon has expired' })
   }
@@ -36,6 +39,7 @@ export const getAvailableCoupons = async (req, res) => {
   const coupons = await Coupon.find({
     isActive: true,
     expiryDate: { $gt: new Date() },
+    userId: { $in: [null, req.user._id] },
     $or: [
       { usageLimit: null },
       { $expr: { $lt: ['$usedCount', '$usageLimit'] } },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import api from '../api/axios'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useToast } from '../context/ToastContext'
@@ -14,15 +14,50 @@ const STATUS_COLORS = {
   cancelled: 'bg-red-100 text-red-700',
 }
 
+const STEPS = ['pending', 'confirmed', 'shipped', 'delivered']
+
+const WAVE_PATH = 'M0 20 Q30 4 60 20 T120 20 T180 20 T240 20 T300 20'
+
+const waveTopPct = (f) => {
+  const x = f * 300
+  const bump = Math.floor(x / 60)
+  const t = (x % 60) / 60
+  const sign = bump % 2 === 0 ? -1 : 1
+  return ((20 + sign * 32 * t * (1 - t)) / 40) * 100
+}
+
 export default function OrderDetails() {
   const { id } = useParams()
   const { toast } = useToast()
   const [order, setOrder] = useState(null)
   const [msg, setMsg] = useState('')
+  const [wave, setWave] = useState(0)
 
   useEffect(() => {
     api.get(`/orders/${id}`).then((r) => setOrder(r.data.order)).catch(() => setOrder(null))
   }, [id])
+
+  useEffect(() => {
+    const idx = STEPS.indexOf(order?.orderStatus)
+    if (idx < 0) return
+    setWave(0)
+    const target = idx / (STEPS.length - 1)
+    const dur = 1300
+    let raf
+    const delay = setTimeout(() => {
+      const start = performance.now()
+      const tick = (now) => {
+        const p = Math.min(1, (now - start) / dur)
+        setWave((1 - Math.pow(1 - p, 3)) * target)
+        if (p < 1) raf = requestAnimationFrame(tick)
+      }
+      raf = requestAnimationFrame(tick)
+    }, 400)
+    return () => {
+      clearTimeout(delay)
+      cancelAnimationFrame(raf)
+    }
+  }, [order?._id, order?.orderStatus])
 
   if (!order) return <LoadingSpinner text="Loading order..." />
 
@@ -64,6 +99,65 @@ export default function OrderDetails() {
           )}
         </div>
       </div>
+      {order.orderStatus !== 'cancelled' && (
+        <div className="mt-8 rounded-[25px] border border-[var(--line)] bg-white px-6 pb-5 pt-16">
+          <div className="relative h-20">
+            <svg viewBox="0 0 300 40" preserveAspectRatio="none" className="h-full w-full">
+              <path
+                d={WAVE_PATH}
+                fill="none"
+                stroke="var(--line)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              <path
+                d={WAVE_PATH}
+                fill="none"
+                stroke="var(--brand)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+                pathLength="1"
+                style={{ strokeDasharray: 1, strokeDashoffset: 1 - wave }}
+              />
+            </svg>
+            {STEPS.map((s, i) => (
+              <span
+                key={s}
+                className={`absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-colors duration-300 ${
+                  wave >= i / (STEPS.length - 1) - 0.02
+                    ? 'border-[var(--brand)] bg-[var(--brand)]'
+                    : 'border-[var(--line-2)] bg-white'
+                }`}
+                style={{
+                  left: `${(i / (STEPS.length - 1)) * 100}%`,
+                  top: `${waveTopPct(i / (STEPS.length - 1))}%`,
+                }}
+              />
+            ))}
+            <img
+              src="/Dogne.gif"
+              alt=""
+              className="absolute h-14 -translate-x-1/2 -translate-y-full"
+              style={{ left: `${wave * 100}%`, top: `${waveTopPct(wave)}%` }}
+            />
+          </div>
+          <div className="mt-3 flex justify-between text-[10px] font-bold uppercase tracking-wide">
+            {STEPS.map((s, i) => (
+              <span
+                key={s}
+                className={`transition-colors duration-300 ${
+                  wave >= i / (STEPS.length - 1) - 0.02 ? 'text-[var(--ink)]' : 'text-[var(--faint)]'
+                }`}
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {msg && <p className="mt-3 rounded-xl bg-[var(--page)] px-4 py-2 text-sm font-semibold text-[var(--brand)]">{msg}</p>}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
@@ -110,6 +204,21 @@ export default function OrderDetails() {
               </div>
             </div>
           </div>
+
+          {order.orderStatus === 'delivered' ? (
+            <Link
+              to={`/orders/${order._id}/spin`}
+              className="block rounded-[25px] border border-[var(--line)] bg-white p-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <p className="text-3xl">🎡</p>
+              <p className="mt-1 font-extrabold text-[var(--ink)]">Spin &amp; Win</p>
+              <p className="mt-0.5 text-xs text-[var(--muted)]">Your pawsome surprise awaits — try your luck!</p>
+            </Link>
+          ) : order.orderStatus !== 'cancelled' ? (
+            <p className="rounded-[25px] border border-dashed border-[var(--line-2)] p-4 text-center text-xs font-semibold text-[var(--muted)]">
+              🔒 Your spin unlocks once the order is delivered
+            </p>
+          ) : null}
         </div>
       </div>
     </main>

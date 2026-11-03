@@ -14,6 +14,8 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState([])
   const [users, setUsers] = useState([])
   const [coupons, setCoupons] = useState([])
+  const [spins, setSpins] = useState([])
+  const [campaign, setCampaign] = useState(null)
   const [couponForm, setCouponForm] = useState({
     code: '', discountType: 'percentage', discountValue: '',
     minimumOrderAmount: 0, maximumDiscount: '', expiryDate: '', usageLimit: '',
@@ -26,7 +28,27 @@ export default function AdminDashboard() {
     api.get('/admin/products').then((r) => setProducts(r.data.products)).catch(() => {})
     api.get('/admin/users').then((r) => setUsers(r.data.users)).catch(() => {})
     api.get('/coupons').then((r) => setCoupons(r.data.coupons)).catch(() => {})
+    api.get('/spin/admin/history').then((r) => {
+      setSpins(r.data.attempts)
+      setCampaign(r.data.campaign)
+    }).catch(() => {})
   }, [])
+
+  const saveCampaign = async (e) => {
+    e.preventDefault()
+    try {
+      const r = await api.put('/spin/admin/campaign', {
+        minimumOrderAmount: Number(campaign.minimumOrderAmount),
+        maxSpinsPerCustomer: Number(campaign.maxSpinsPerCustomer),
+        couponExpiryDays: Number(campaign.couponExpiryDays),
+        isActive: campaign.isActive,
+      })
+      setCampaign(r.data.campaign)
+      setMsg('')
+    } catch (err) {
+      setMsg(err.response?.data?.message || 'Could not save campaign')
+    }
+  }
 
   const saveCoupon = async (e) => {
     e.preventDefault()
@@ -91,6 +113,7 @@ export default function AdminDashboard() {
     ['products', `Products (${products.length})`],
     ['customers', `Customers (${users.length})`],
     ['coupons', `Coupons (${coupons.length})`],
+    ['spins', `Paw Spin (${spins.length})`],
   ]
 
   return (
@@ -269,6 +292,62 @@ export default function AdminDashboard() {
               </tbody>
             </table>
             {coupons.length === 0 && <p className="p-8 text-center text-[var(--muted)]">No coupons yet</p>}
+          </div>
+        </div>
+      )}
+
+      {tab === 'spins' && (
+        <div className="mt-8 grid gap-6 lg:grid-cols-[340px_1fr]">
+          <form onSubmit={saveCampaign} className="h-fit rounded-[20px] border border-[var(--line)] bg-white p-5">
+            <h3 className="font-bold text-[var(--ink)]">Campaign settings</h3>
+            {campaign ? (
+              <div className="mt-3 space-y-3">
+                <label className="block text-xs font-bold text-[var(--label)]">Min order ₹ to unlock spin</label>
+                <input type="number" min="0" value={campaign.minimumOrderAmount}
+                  onChange={(e) => setCampaign({ ...campaign, minimumOrderAmount: e.target.value })}
+                  className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
+                <label className="block text-xs font-bold text-[var(--label)]">Max spins per customer</label>
+                <input type="number" min="1" value={campaign.maxSpinsPerCustomer}
+                  onChange={(e) => setCampaign({ ...campaign, maxSpinsPerCustomer: e.target.value })}
+                  className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
+                <label className="block text-xs font-bold text-[var(--label)]">Coupon expiry (days)</label>
+                <input type="number" min="1" value={campaign.couponExpiryDays}
+                  onChange={(e) => setCampaign({ ...campaign, couponExpiryDays: e.target.value })}
+                  className="w-full rounded-xl border border-[var(--line-2)] bg-white px-3 py-2.5 text-sm outline-none" />
+                <button
+                  type="button"
+                  onClick={() => setCampaign({ ...campaign, isActive: !campaign.isActive })}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold ${campaign.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}
+                >
+                  {campaign.isActive ? 'Campaign Active' : 'Campaign Inactive'}
+                </button>
+                <button className="block w-full rounded-full bg-[var(--brand)] py-2.5 font-bold text-white transition hover:bg-[var(--brand-dark)]">
+                  Save settings
+                </button>
+              </div>
+            ) : (
+              <p className="mt-3 text-sm text-[var(--muted)]">No campaign yet — one is created automatically on first spin.</p>
+            )}
+          </form>
+
+          <div className="overflow-x-auto rounded-[20px] border border-[var(--line)] bg-white">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="border-b border-[var(--line)] text-[var(--muted)]">
+                <tr><th className="p-4">Customer</th><th className="p-4">Order</th><th className="p-4">Reward</th><th className="p-4">Code</th><th className="p-4">Spun at</th></tr>
+              </thead>
+              <tbody>
+                {spins.map((s) => (
+                  <tr key={s._id} className="border-b border-[var(--cream)]">
+                    <td className="p-4">{s.userId?.name}<br /><span className="text-xs text-[var(--faint)]">{s.userId?.email}</span></td>
+                    <td className="p-4 font-mono text-xs">#{s.orderId?._id?.slice(-8).toUpperCase()}<br /><span className="text-[var(--faint)]">{inr(s.orderId?.subtotal || 0)}</span></td>
+                    <td className="p-4 font-semibold">{s.rewardId?.name}</td>
+                    <td className="p-4 font-mono text-xs">{s.couponId?.code || s.giftCode || '—'}</td>
+                    <td className="p-4">{new Date(s.spunAt).toLocaleDateString('en-IN')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {spins.length === 0 && <p className="p-8 text-center text-[var(--muted)]">No spins yet</p>}
           </div>
         </div>
       )}
