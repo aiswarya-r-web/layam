@@ -61,3 +61,40 @@ body {
   animation: confetti-fall 3s linear infinite;
   pointer-events: none;
 }
+
+@keyframes confetti-rise {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+.confetti-rise-piece {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 2px;
+  animation: confetti-rise 1.7s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes paw-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1.25) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+.paw-particle {
+  position: absolute;
+  animation: paw-burst 0.7s ease-out forwards;
+  pointer-events: none;
+}

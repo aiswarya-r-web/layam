@@ -32,6 +32,20 @@ export const getCoupons = async (req, res) => {
   res.json({ coupons })
 }
 
+export const getAvailableCoupons = async (req, res) => {
+  const coupons = await Coupon.find({
+    isActive: true,
+    expiryDate: { $gt: new Date() },
+    $or: [
+      { usageLimit: null },
+      { $expr: { $lt: ['$usedCount', '$usageLimit'] } },
+    ],
+  })
+    .select('code discountType discountValue minimumOrderAmount maximumDiscount expiryDate')
+    .sort({ createdAt: -1 })
+  res.json({ coupons })
+}
+
 export const createCoupon = async (req, res) => {
   const coupon = await Coupon.create(req.body)
   res.status(201).json({ coupon })

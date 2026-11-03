@@ -119,8 +119,9 @@ export default function Cart() {
           )}
           <Link
             to="/checkout"
-            className="mt-5 block rounded-full bg-[#7a4a21] py-3.5 text-center font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5f3a19]"
+            className="mt-5 flex items-center justify-center gap-2 rounded-full bg-[#7a4a21] py-3.5 font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5f3a19]"
           >
+            <img src="/dognew.gif" alt="" className="h-7" />
             Proceed to checkout
           </Link>
         </div>

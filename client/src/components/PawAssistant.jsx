@@ -1,215 +1,135 @@
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import {
-  PawPrint,
-  ShoppingBag,
-  Heart,
-  Star,
-  ArrowRight,
-  Send,
-  Circle,
-} from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { PawPrint, Send, X } from 'lucide-react'
+import api from '../api/axios'
+import { useAuth } from '../context/AuthContext'
+import Spinner from './Spinner'
 
-const features = [
-  { icon: ShoppingBag, title: 'Find the right', subtitle: 'products' },
-  { icon: Heart, title: 'Get care &', subtitle: 'feeding tips' },
-  { icon: Star, title: 'Personalized', subtitle: 'for your dog' },
+const SUGGESTIONS = [
+  'Best toys for a puppy?',
+  'How does delivery work?',
+  'Healthy treats for senior dogs',
 ]
 
-const container = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.18 } },
-}
-
-const item = {
-  hidden: { opacity: 0, y: 25 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' } },
+const GREETING = {
+  role: 'assistant',
+  content: "Woof! I'm Paw-sistant 🐾 Ask me about products, orders, delivery or dog care.",
 }
 
 export default function PawAssistant() {
+  const { user } = useAuth()
+  const [open, setOpen] = useState(false)
+  const [messages, setMessages] = useState([GREETING])
+  const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const listRef = useRef(null)
+
+  useEffect(() => {
+    if (open) listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
+  }, [messages, open])
+
+  if (!user) return null
+
+  const send = async (text = input) => {
+    const content = text.trim()
+    if (!content || busy) return
+    const next = [...messages, { role: 'user', content }]
+    setMessages(next)
+    setInput('')
+    setBusy(true)
+    try {
+      const res = await api.post('/assistant/chat', { messages: next })
+      setMessages((m) => [...m, { role: 'assistant', content: res.data.reply }])
+    } catch (e) {
+      setMessages((m) => [
+        ...m,
+        { role: 'assistant', content: e.response?.data?.message || 'Sorry, I could not fetch a reply.' },
+      ])
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
-    <section className="relative overflow-hidden bg-[#fdf3e3] px-5 py-12 md:px-10 lg:py-14">
-      {/* Background decorations */}
-      <div className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-[#f1e3cb]/60 blur-3xl" />
-      <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-[#f2cf8b]/40 blur-3xl" />
-
-      <div className="relative mx-auto grid max-w-[1450px] items-center gap-8 lg:grid-cols-[0.9fr_1.1fr_1fr]">
-        {/* LEFT - DOG MASCOT */}
-        <motion.div
-          initial={{ opacity: 0, x: -70 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9 }}
-          className="relative flex items-end justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, -15, 0], rotate: [0, 15, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="absolute left-5 top-4 text-[#dda044]"
-          >
-            <PawPrint size={35} fill="currentColor" />
-          </motion.div>
-
-          <motion.span
-            animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute right-5 top-8 text-4xl text-[#a0522d]"
-          >
-            ✳
-          </motion.span>
-
-          <motion.img
-            src="/assistant.png"
-            alt="Vallu Paw Assistant puppy"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="relative z-10 w-full max-w-[340px] object-contain drop-shadow-xl"
-          />
-        </motion.div>
-
-        {/* CENTER - CONTENT */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="flex flex-col items-center text-center lg:items-start lg:text-left"
-        >
-          <motion.div variants={item} className="flex items-center gap-2">
-            <h2 className="text-3xl font-black tracking-tight text-[#5d3a1a] md:text-4xl xl:text-5xl">
-              Paw Assistant
-            </h2>
-            <PawPrint size={35} fill="#7a4a21" className="text-[#7a4a21]" />
-          </motion.div>
-
-          <motion.p
-            variants={item}
-            className="mt-3 max-w-md text-base leading-relaxed text-[#6b553f] md:text-lg"
-          >
-            Your friendly dog expert. Get product recommendations,
-            care tips and more!
-          </motion.p>
-
-          <motion.div variants={container} className="mt-6 grid w-full grid-cols-3 gap-3">
-            {features.map((feature) => {
-              const Icon = feature.icon
-              return (
-                <motion.div
-                  key={feature.title}
-                  variants={item}
-                  whileHover={{ y: -5, scale: 1.04 }}
-                  className="flex items-center gap-2"
-                >
-                  <Icon size={30} strokeWidth={1.8} className="shrink-0 text-[#8a5a2b]" />
-                  <div className="text-left text-xs font-semibold leading-4 text-[#382619] md:text-sm">
-                    <p>{feature.title}</p>
-                    <p>{feature.subtitle}</p>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-
-          <motion.div variants={item} className="mt-8">
-            <Link
-              to="/contact"
-              className="group inline-flex items-center justify-center gap-4 rounded-full border-b-4 border-[#b8801f] bg-gradient-to-b from-[#f2cf8b] to-[#dda044] px-8 py-4 text-base font-bold text-[#5d3a1a] shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl md:text-lg"
+    <>
+      {open && (
+        <div className="fixed bottom-24 right-4 z-50 flex h-[420px] w-[320px] flex-col overflow-hidden rounded-[20px] border border-[#e8dcc8] bg-white shadow-2xl sm:right-6">
+          <div className="flex items-center gap-2 bg-[#7a4a21] px-4 py-3 text-white">
+            <PawPrint size={18} />
+            <p className="font-extrabold">Paw-sistant</p>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close assistant"
+              className="ml-auto rounded-full p-1 transition hover:bg-white/20"
             >
-              Chat with Paw Assistant
-              <ArrowRight size={22} className="transition-transform duration-300 group-hover:translate-x-2" />
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* RIGHT - CHAT PREVIEW */}
-        <motion.div
-          initial={{ opacity: 0, x: 60, scale: 0.95 }}
-          whileInView={{ opacity: 1, x: 0, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mx-auto w-full max-w-[440px]"
-        >
-          <div className="overflow-hidden rounded-[30px] border border-[#e8dcc8] bg-[#fffdf8] shadow-[0_15px_40px_rgba(93,58,26,0.12)]">
-            {/* Chat header */}
-            <div className="flex items-center justify-between border-b border-[#e8dcc8] bg-[#fdf9f0] px-5 py-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src="/dog-pic.png"
-                  alt="Paw Assistant"
-                  className="h-10 w-10 rounded-full border border-[#e5d3b3] object-cover"
-                />
-                <div>
-                  <h3 className="font-bold text-[#5d3a1a]">Paw Assistant</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-[#678D36]">
-                    <Circle size={8} fill="currentColor" />
-                    Online
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat messages */}
-            <div className="space-y-4 p-5">
-              <motion.div
-                initial={{ opacity: 0, x: -15 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-                className="flex items-start gap-2"
-              >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f1e3cb] text-[#7a4a21]">
-                  <PawPrint size={20} />
-                </div>
-                <div className="rounded-2xl rounded-tl-sm bg-[#f7ead6] px-4 py-3 text-sm text-[#6b553f]">
-                  Hi! 🐾 How can I help your furry friend today?
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 15 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.9 }}
-                className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#ecc89a] px-4 py-3 text-sm text-[#5d3a1a]"
-              >
-                I have a 3-month-old Golden Retriever. Suggest some toys.
-              </motion.div>
-
-              {/* Typing animation */}
-              <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f1e3cb] text-[#7a4a21]">
-                  <PawPrint size={19} />
-                </div>
-                <div className="flex gap-1 rounded-full bg-[#f7ead6] px-4 py-3">
-                  {[0, 1, 2].map((dot) => (
-                    <motion.span
-                      key={dot}
-                      animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: dot * 0.15 }}
-                      className="h-2 w-2 rounded-full bg-[#7a4a21]"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Chat input preview */}
-            <div className="px-5 pb-5">
-              <div className="flex items-center gap-2 rounded-full border border-[#e5d3b3] bg-white p-2 pl-4">
-                <span className="flex-1 text-sm text-[#a08b74]">
-                  Ask anything about your dog...
-                </span>
-                <motion.span
-                  whileHover={{ scale: 1.1, rotate: -10 }}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[#7a4a21] text-white"
-                >
-                  <Send size={17} />
-                </motion.span>
-              </div>
-            </div>
+              <X size={16} />
+            </button>
           </div>
-        </motion.div>
-      </div>
-    </section>
+
+          <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto bg-[#faf9f5] p-3">
+            {messages.map((m, i) => (
+              <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <p
+                  className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${
+                    m.role === 'user'
+                      ? 'rounded-br-sm bg-[#7a4a21] text-white'
+                      : 'rounded-bl-sm bg-white text-[#382619] shadow-sm'
+                  }`}
+                >
+                  {m.content}
+                </p>
+              </div>
+            ))}
+            {busy && (
+              <div className="flex justify-start">
+                <p className="rounded-2xl rounded-bl-sm bg-white px-3 py-2 shadow-sm">
+                  <Spinner className="h-4 w-4 border-[#7a4a21]/30 border-t-[#7a4a21]" />
+                </p>
+              </div>
+            )}
+            {messages.length === 1 && !busy && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => send(s)}
+                    className="rounded-full border border-[#e5d3b3] bg-white px-3 py-1.5 text-xs font-semibold text-[#7a4a21] transition hover:bg-[#f1e6d2]"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <form
+            onSubmit={(e) => { e.preventDefault(); send() }}
+            className="flex items-center gap-2 border-t border-[#e8dcc8] p-3"
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask Paw-sistant..."
+              className="w-full rounded-full border border-[#e5d3b3] bg-[#faf9f5] px-4 py-2 text-sm outline-none focus:border-[#8a5a2b]"
+            />
+            <button
+              type="submit"
+              disabled={busy || !input.trim()}
+              aria-label="Send message"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7a4a21] text-white transition hover:bg-[#5f3a19] disabled:opacity-40"
+            >
+              <Send size={15} />
+            </button>
+          </form>
+        </div>
+      )}
+
+      <button
+        onClick={() => setOpen(!open)}
+        aria-label="Open Paw-sistant"
+        className="fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#7a4a21] text-white shadow-xl transition hover:scale-110 hover:bg-[#5f3a19] sm:right-6"
+      >
+        {open ? <X size={22} /> : <PawPrint size={24} />}
+      </button>
+    </>
   )
 }

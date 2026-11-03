@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Heart, Plus } from 'lucide-react'
+import { Heart, Minus, Plus } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import Rating from './Rating'
 import Spinner from './Spinner'
+import PawBurst from './PawBurst'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 
@@ -10,9 +11,24 @@ const inr = (n) => `₹${Number(n).toLocaleString('en-IN')}`
 
 export default function ProductCard({ product }) {
   const { user } = useAuth()
-  const { addToCart, addToWishlist, removeFromWishlist, isWishlisted } = useCart()
+  const { cart, addToCart, updateQty, addToWishlist, removeFromWishlist, isWishlisted } = useCart()
   const navigate = useNavigate()
   const [busy, setBusy] = useState('')
+  const [burst, setBurst] = useState(false)
+
+  const cartItem = cart.items.find((i) => i.product._id === product._id)
+
+  const stepQty = (delta) => async (e) => {
+    e.preventDefault()
+    if (!user) return navigate('/login')
+    if (busy) return
+    setBusy('cart')
+    try {
+      await updateQty(product._id, (cartItem?.quantity || 0) + delta)
+    } finally {
+      setBusy('')
+    }
+  }
 
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
@@ -26,6 +42,10 @@ export default function ProductCard({ product }) {
     setBusy(key)
     try {
       await fn(product._id)
+      if (key === 'wish' && !wished) {
+        setBurst(true)
+        setTimeout(() => setBurst(false), 750)
+      }
     } catch {} finally {
       setBusy('')
     }
@@ -61,6 +81,7 @@ export default function ProductCard({ product }) {
           ) : (
             <Heart size={17} fill={wished ? 'currentColor' : 'none'} />
           )}
+          {burst && <PawBurst />}
         </button>
       </div>
 
@@ -82,16 +103,47 @@ export default function ProductCard({ product }) {
               </span>
             )}
           </div>
-          <button
-            onClick={guard(addToCart, 'cart')}
-            aria-label="Add to cart"
-            disabled={product.stock < 1 || Boolean(busy)}
-            className="flex h-9 w-9 items-center justify-center rounded-full
-            bg-[#7a4a21] text-white transition hover:scale-110 hover:bg-[#5f3a19]
-            disabled:opacity-40"
-          >
-            {busy === 'cart' ? <Spinner /> : <Plus size={18} />}
-          </button>
+          {cartItem ? (
+            <div
+              onClick={(e) => e.preventDefault()}
+              className="flex h-9 items-center rounded-full bg-[#7a4a21] text-white"
+            >
+              <button
+                onClick={stepQty(-1)}
+                disabled={Boolean(busy)}
+                aria-label="Decrease quantity"
+                className="flex h-full items-center px-2.5 disabled:opacity-40"
+              >
+                <Minus size={15} />
+              </button>
+              <span className="min-w-5 text-center text-sm font-bold">
+                {busy === 'cart' ? (
+                  <Spinner className="h-3 w-3 border-white/40 border-t-white" />
+                ) : (
+                  cartItem.quantity
+                )}
+              </span>
+              <button
+                onClick={stepQty(1)}
+                disabled={Boolean(busy)}
+                aria-label="Increase quantity"
+                className="flex h-full items-center px-2.5 disabled:opacity-40"
+              >
+                <Plus size={15} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={guard(addToCart, 'cart')}
+              aria-label="Add to cart"
+              disabled={product.stock < 1 || Boolean(busy)}
+              className="flex h-9 w-9 items-center justify-center rounded-full
+              bg-[#7a4a21] text-white transition hover:scale-110 hover:bg-[#5f3a19]
+              disabled:opacity-40"
+            >
+              {busy === 'cart' ? <Spinner /> : <Plus size={18} />}
+            </button>
+          )}
         </div>
         {product.stock < 1 && (
           <p className="mt-1 text-xs font-semibold text-red-600">Out of stock</p>

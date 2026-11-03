@@ -5,6 +5,7 @@ import { ToastProvider } from './context/ToastContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import BirthdayBanner from './components/BirthdayBanner'
+import PawAssistant from './components/PawAssistant'
 import Breadcrumbs from './components/Breadcrumbs'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -59,6 +60,7 @@ export default function App() {
             </div>
             <Footer />
             <BirthdayBanner />
+            <PawAssistant />
           </div>
           </CartProvider>
         </AuthProvider>

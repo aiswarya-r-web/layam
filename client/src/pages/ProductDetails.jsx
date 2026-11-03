@@ -5,6 +5,7 @@ import api from '../api/axios'
 import Rating from '../components/Rating'
 import ProductCard from '../components/ProductCard'
 import Spinner from '../components/Spinner'
+import PawBurst from '../components/PawBurst'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
@@ -26,6 +27,7 @@ export default function ProductDetails() {
   const [review, setReview] = useState({ rating: 5, comment: '' })
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState('')
+  const [burst, setBurst] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -65,6 +67,10 @@ export default function ProductDetails() {
     setBusy(key)
     try {
       await fn()
+      if (key === 'wish' && !wished) {
+        setBurst(true)
+        setTimeout(() => setBurst(false), 750)
+      }
     } catch {} finally {
       setBusy('')
     }
@@ -161,7 +167,7 @@ export default function ProductDetails() {
                 'wish'
               )}
               disabled={Boolean(busy)}
-              className={`inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-bold transition disabled:opacity-50 ${
+              className={`relative inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-bold transition disabled:opacity-50 ${
                 wished
                   ? 'border-[#7a4a21] bg-[#7a4a21] text-white'
                   : 'border-[#e5d3b3] bg-white text-[#7a4a21] hover:bg-[#f1e6d2]'
@@ -173,6 +179,7 @@ export default function ProductDetails() {
                 <Heart size={19} fill={wished ? 'currentColor' : 'none'} />
               )}
               {wished ? 'Wishlisted' : 'Wishlist'}
+              {burst && <PawBurst />}
             </button>
           </div>
         </div>
