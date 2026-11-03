@@ -29,10 +29,12 @@ function Burst({ style, seed }) {
 export default function Crackers() {
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
-      <Burst seed={0.3} style={{ left: '5%', top: '22%' }} />
-      <Burst seed={1.1} style={{ left: '9%', top: '64%' }} />
-      <Burst seed={0.7} style={{ right: '6%', top: '28%' }} />
-      <Burst seed={1.6} style={{ right: '10%', top: '68%' }} />
+      <Burst seed={0.3} style={{ left: '7%', top: '18%' }} />
+      <Burst seed={1.1} style={{ left: '4%', top: '52%' }} />
+      <Burst seed={2.0} style={{ left: '12%', top: '78%' }} />
+      <Burst seed={0.7} style={{ right: '8%', top: '22%' }} />
+      <Burst seed={1.6} style={{ right: '4%', top: '56%' }} />
+      <Burst seed={2.5} style={{ right: '13%', top: '80%' }} />
     </div>
   )
 }
