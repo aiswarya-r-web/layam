@@ -18,10 +18,10 @@ const PORT = process.env.PORT || 5000
 
 const start = async () => {
   try {
-    if (process.env.MONGO_URI) {
+    if (process.env.MONGODB_URI) {
       await connectDB()
     } else {
-      console.warn('MONGO_URI not set — starting without database connection')
+      console.warn('MONGODB_URI not set — starting without database connection')
     }
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
   } catch (err) {
