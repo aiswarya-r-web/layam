@@ -52,6 +52,31 @@ export const getMe = async (req, res) => {
   res.json({ user: sanitize(req.user) })
 }
 
+export const updateProfile = async (req, res) => {
+  const { name, phone, currentPassword, newPassword } = req.body
+  const user = await User.findById(req.user._id).select('+password')
+  if (!user) return res.status(404).json({ message: 'User not found' })
+
+  if (name !== undefined) {
+    if (!name.trim()) return res.status(400).json({ message: 'Name cannot be empty' })
+    user.name = name.trim()
+  }
+  if (phone !== undefined) user.phone = phone.trim()
+
+  if (newPassword) {
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' })
+    }
+    if (!currentPassword || !(await bcrypt.compare(currentPassword, user.password))) {
+      return res.status(400).json({ message: 'Current password is incorrect' })
+    }
+    user.password = await bcrypt.hash(newPassword, 10)
+  }
+
+  await user.save()
+  res.json({ user: sanitize(user) })
+}
+
 export const logout = async (req, res) => {
   res.json({ message: 'Logged out successfully' })
 }
