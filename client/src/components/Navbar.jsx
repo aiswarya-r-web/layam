@@ -46,11 +46,11 @@ export default function Navbar() {
       <Link to="/" className="flex min-w-0 items-center gap-2">
         <img
           src="/dog-pic.png"
-          alt="Vallu mascot"
+          alt="Vaalu mascot"
           className="logo-dog h-12 w-12 shrink-0 rounded-full border-2 border-[var(--line-2)] bg-white object-cover"
         />
         <span className="truncate text-2xl font-extrabold tracking-tight">
-          Vallu<span className="text-[var(--accent-dark)]">.</span>
+          Vaalu<span className="text-[var(--accent-dark)]">.</span>
         </span>
       </Link>
 

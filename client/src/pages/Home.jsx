@@ -98,7 +98,7 @@ export default function Home() {
 
       {/* WHY LAYAM */}
       <section className="mx-auto max-w-[1400px] px-6 py-14 md:px-14">
-        <h2 className="text-center text-3xl font-extrabold text-[var(--ink)]">Why choose Vallu?</h2>
+        <h2 className="text-center text-3xl font-extrabold text-[var(--ink)]">Why choose Vaalu?</h2>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {perks.map(({ icon: Icon, title, text }) => (
             <div

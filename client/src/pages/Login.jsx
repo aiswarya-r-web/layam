@@ -35,11 +35,11 @@ export default function Login() {
         <div className="flex flex-col items-center">
           <img
             src="/dog-pic.png"
-            alt="Vallu mascot"
+            alt="Vaalu mascot"
             className="logo-dog h-16 w-16 rounded-full border-2 border-[var(--line-2)] bg-[var(--page)] object-cover"
           />
           <h1 className="mt-4 text-2xl font-extrabold text-[var(--ink)]">Welcome back</h1>
-          <p className="mt-1 text-sm text-[var(--muted)]">Log in to your Vallu account</p>
+          <p className="mt-1 text-sm text-[var(--muted)]">Log in to your Vaalu account</p>
         </div>
 
         {error && (
@@ -80,7 +80,7 @@ export default function Login() {
         </form>
 
         <p className="mt-5 text-center text-sm text-[var(--muted)]">
-          New to Vallu?{' '}
+          New to Vaalu?{' '}
           <Link to="/signup" className="font-bold text-[var(--brand)] hover:underline">
             Create an account
           </Link>

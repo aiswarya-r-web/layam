@@ -51,7 +51,7 @@ export default function BirthdayBanner() {
 
         <img
           src="/dog-pic.png"
-          alt="Vallu mascot"
+          alt="Vaalu mascot"
           className="logo-dog mx-auto h-24 w-24 rounded-full border-2 border-[var(--line-2)] object-cover"
         />
 

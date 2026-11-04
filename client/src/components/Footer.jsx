@@ -9,11 +9,11 @@ export default function Footer() {
           <Link to="/" className="flex items-center gap-2">
             <img
               src="/dog-pic.png"
-              alt="Vallu mascot"
+              alt="Vaalu mascot"
               className="logo-dog h-11 w-11 rounded-full border-2 border-[var(--line-2)] bg-white object-cover"
             />
             <span className="text-xl font-extrabold">
-              Vallu<span className="text-[var(--accent-dark)]">.</span>
+              Vaalu<span className="text-[var(--accent-dark)]">.</span>
             </span>
           </Link>
           <p className="mt-4 text-sm text-[var(--muted)]">
@@ -67,7 +67,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-[var(--line)] py-5 text-center text-xs text-[var(--faint)]">
-        © {new Date().getFullYear()} Vallu. Made with love for good dogs everywhere.
+        © {new Date().getFullYear()} Vaalu. Made with love for good dogs everywhere.
       </div>
     </footer>
   )

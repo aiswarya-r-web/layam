@@ -46,8 +46,7 @@ const orderSchema = new mongoose.Schema(
     deliveryCharge: { type: Number, default: 0, min: 0 },
     totalAmount: { type: Number, required: true, min: 0 },
     couponCode: { type: String, uppercase: true, trim: true },
-    paymentMethod: { type: String, enum: ['cod', 'stripe'], default: 'cod' },
-    stripeSessionId: { type: String, index: true },
+    paymentMethod: { type: String, enum: ['cod'], default: 'cod' },
     paymentStatus: {
       type: String,
       enum: ['pending', 'paid', 'failed', 'refunded'],

@@ -13,7 +13,7 @@ export default function Landing() {
       <section className="relative mx-auto grid min-h-[calc(100vh-82px)] max-w-[1600px] grid-cols-1 items-center gap-10 px-6 py-10 md:px-14 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:px-20">
         <div className="relative z-10 flex flex-col items-start">
           <span className="mb-5 rounded-full border border-[var(--line-2)] bg-white/60 px-4 py-2 text-xs font-semibold tracking-widest text-[var(--accent-dark)]">
-            🐾 WELCOME TO VALLU
+            🐾 WELCOME TO VAaLU
           </span>
 
           <h1 className="max-w-[650px] text-5xl font-extrabold leading-[1.12] tracking-tight text-[var(--ink)] md:text-6xl xl:text-[68px]">

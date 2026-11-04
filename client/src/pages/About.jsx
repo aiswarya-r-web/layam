@@ -7,7 +7,7 @@ export default function About() {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--line-2)] bg-white text-[var(--accent-dark)]">
           <PawPrint size={30} fill="currentColor" />
         </div>
-        <h1 className="mt-5 text-4xl font-extrabold text-[var(--ink)]">About Vallu
+        <h1 className="mt-5 text-4xl font-extrabold text-[var(--ink)]">About Vaalu
           
         </h1>
         <p className="mt-3 text-lg text-[var(--muted)]">Every Tail Deserves a Little Extra Love.</p>
@@ -15,7 +15,7 @@ export default function About() {
 
       <div className="mt-10 space-y-6 rounded-[30px] border border-[var(--line)] bg-white p-8 leading-relaxed text-[var(--muted-dark)]">
         <p>
-          Vallu started with a simple belief: our dogs give us their whole hearts,
+          Vaalu started with a simple belief: our dogs give us their whole hearts,
           so they deserve the very best in return. We curate premium food, treats,
           toys and care essentials — everything your furry friend needs to live a
           happy, healthy life.

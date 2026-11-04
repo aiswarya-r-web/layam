@@ -47,10 +47,10 @@ export default function Signup() {
         <div className="flex flex-col items-center">
           <img
             src="/dog-pic.png"
-            alt="Vallu mascot"
+            alt="Vaalu mascot"
             className="logo-dog h-16 w-16 rounded-full border-2 border-[var(--line-2)] bg-[var(--page)] object-cover"
           />
-          <h1 className="mt-4 text-2xl font-extrabold text-[var(--ink)]">Join Vallu</h1>
+          <h1 className="mt-4 text-2xl font-extrabold text-[var(--ink)]">Join Vaalu</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">Create your account in seconds</p>
         </div>
 
