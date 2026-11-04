@@ -4,7 +4,7 @@ import { ChevronRight, PawPrint } from 'lucide-react'
 const NAMES = {
   home: 'Home', shop: 'Shop', products: 'Product', cart: 'Cart',
   wishlist: 'Wishlist', checkout: 'Checkout', orders: 'My Orders',
-  profile: 'Profile', dogs: 'My Dogs', about: 'About', contact: 'Contact',
+  profile: 'Profile', dogs: 'My Dogs', about: 'About',
   admin: 'Admin', birthdays: 'Birthday Club', login: 'Log in', signup: 'Sign up',
 }
 

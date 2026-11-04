@@ -26,7 +26,6 @@ import Spin from './pages/Spin'
 import Profile from './pages/Profile'
 import MyDogs from './pages/MyDogs'
 import About from './pages/About'
-import Contact from './pages/Contact'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminBirthdays from './pages/AdminBirthdays'
 
@@ -50,7 +49,6 @@ export default function App() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
 
                 <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
                 <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />

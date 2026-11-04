@@ -1,4 +1,4 @@
-import { Heart } from 'lucide-react'
+import { Heart, Mail, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -39,30 +39,41 @@ export default function Footer() {
           <h4 className="font-bold text-[var(--ink)]">Company</h4>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
             <li><Link to="/about" className="hover:text-[var(--brand)]">About Us</Link></li>
-            <li><Link to="/contact" className="hover:text-[var(--brand)]">Contact Us</Link></li>
+
             <li><Link to="/orders" className="hover:text-[var(--brand)]">My Orders</Link></li>
             <li><Link to="/dogs" className="hover:text-[var(--brand)]">My Dogs</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-bold text-[var(--ink)]">Stay in the loop</h4>
+          <h4 className="font-bold text-[var(--ink)]">Get in touch</h4>
           <p className="mt-3 text-sm text-[var(--muted)]">
-            New treats and offers, straight to your inbox.
+            Questions about an order or your pup? We're here to help.
           </p>
-          <form
-            className="mt-3 flex overflow-hidden rounded-full border border-[var(--line-2)] bg-white"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <input
-              type="email"
-              placeholder="Your email"
-              className="w-full px-4 py-2.5 text-sm outline-none"
-            />
-            <button className="bg-[var(--brand)] px-5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]">
-              Join
-            </button>
-          </form>
+          <ul className="mt-4 space-y-3 text-sm">
+            <li>
+              <a
+                href="mailto:support@vaalu.com"
+                className="flex items-center gap-2.5 font-semibold text-[var(--ink)] transition hover:text-[var(--brand)]"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--cream-2)] text-[var(--brand)]">
+                  <Mail size={16} />
+                </span>
+                support@vaalu.com
+              </a>
+            </li>
+            <li>
+              <a
+                href="tel:+919876543210"
+                className="flex items-center gap-2.5 font-semibold text-[var(--ink)] transition hover:text-[var(--brand)]"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--cream-2)] text-[var(--brand)]">
+                  <Phone size={16} />
+                </span>
+                +91 98765 43210
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 

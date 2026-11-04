@@ -10,7 +10,7 @@ const links = (user) => [
   { to: user ? '/home' : '/', label: 'Home' },
   { to: '/shop', label: 'Shop' },
   { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
+
 ]
 
 function Badge({ n }) {

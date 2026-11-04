@@ -228,11 +228,13 @@ export default function AdminDashboard() {
               {analytics.revenueByDay.map((d) => {
                 const max = Math.max(...analytics.revenueByDay.map((x) => x.total), 1)
                 return (
-                  <div key={d.date} className="group flex flex-1 flex-col items-center gap-1" title={`${d.date}: ${inr(d.total)} (${d.count} orders)`}>
-                    <div
-                      className="w-full rounded-t-md bg-[var(--brand)]/80 transition group-hover:bg-[var(--brand)]"
-                      style={{ height: `${Math.max(3, (d.total / max) * 100)}%` }}
-                    />
+                  <div key={d.date} className="group flex h-full flex-1 flex-col items-center gap-1" title={`${d.date}: ${inr(d.total)} (${d.count} orders)`}>
+                    <div className="flex w-full flex-1 items-end">
+                      <div
+                        className="w-full rounded-t-md bg-[var(--brand)]/80 transition group-hover:bg-[var(--brand)]"
+                        style={{ height: `${Math.max(2, (d.total / max) * 100)}%` }}
+                      />
+                    </div>
                     <span className="text-[9px] text-[var(--faint)]">{d.date.slice(5)}</span>
                   </div>
                 )

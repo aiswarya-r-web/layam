@@ -74,12 +74,18 @@ export default function MyDogs() {
     <main className="mx-auto max-w-[1000px] px-6 py-10 md:px-14">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-extrabold text-[var(--ink)]">My Dogs</h1>
-        <button
-          onClick={() => { setEditing(null); setForm(EMPTY); setShowForm(true) }}
-          className="inline-flex items-center gap-2 rounded-full bg-[var(--brand)] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]"
-        >
-          <Plus size={16} /> Add a dog
-        </button>
+        {pets.length >= 5 ? (
+          <span className="rounded-full bg-[var(--cream)] px-5 py-2.5 text-sm font-bold text-[var(--muted)]">
+            5/5 dogs added
+          </span>
+        ) : (
+          <button
+            onClick={() => { setEditing(null); setForm(EMPTY); setShowForm(true) }}
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--brand)] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]"
+          >
+            <Plus size={16} /> Add a dog
+          </button>
+        )}
       </div>
 
       {pets.length === 0 && !showForm && (

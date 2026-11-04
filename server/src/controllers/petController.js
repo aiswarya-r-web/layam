@@ -11,9 +11,16 @@ export const getPet = async (req, res) => {
   res.json({ pet })
 }
 
+const MAX_PETS_PER_USER = 5
+
 export const createPet = async (req, res) => {
   const { name, breed, dateOfBirth, age, weight, gender, image, foodPreferences, allergies } = req.body
   if (!name) return res.status(400).json({ message: 'Dog name is required' })
+
+  const count = await Pet.countDocuments({ userId: req.user._id })
+  if (count >= MAX_PETS_PER_USER) {
+    return res.status(400).json({ message: `You can add up to ${MAX_PETS_PER_USER} dog profiles` })
+  }
 
   const pet = await Pet.create({
     userId: req.user._id,

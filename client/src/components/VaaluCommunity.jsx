@@ -1,9 +1,25 @@
 import { motion } from 'framer-motion'
-import { Heart, Star, Quote } from 'lucide-react'
+import { Heart, Star, Quote, PawPrint } from 'lucide-react'
 
 export default function VaaluCommunity() {
   return (
     <section className="relative overflow-hidden px-5 py-10 md:px-10">
+      {/* Floating paw decorations */}
+      <motion.div
+        animate={{ y: [0, -14, 0], rotate: [0, 14, 0] }}
+        transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-[5%] top-8 text-[var(--line-2)]"
+      >
+        <PawPrint size={34} fill="currentColor" />
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, 13, 0], rotate: [0, -16, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-8 right-[6%] text-[var(--gold)]"
+      >
+        <PawPrint size={30} fill="currentColor" />
+      </motion.div>
+
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 lg:grid-cols-[0.8fr_1.7fr_1.15fr]">
         {/* LEFT CONTENT */}
         <motion.div
