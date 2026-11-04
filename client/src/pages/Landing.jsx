@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Heart, PawPrint, LogIn, UserPlus } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import ExploreCollections from '../components/ExploreCollections'
-import PawAssistant from '../components/PawAssistant'
+import PawAssistantSection from '../components/PawAssistantSection'
 import VaaluCommunity from '../components/VaaluCommunity'
 
 export default function Landing() {
@@ -81,7 +81,7 @@ export default function Landing() {
       </section>
 
       <ExploreCollections />
-      <PawAssistant />
+      <PawAssistantSection />
       <VaaluCommunity />
     </main>
   )

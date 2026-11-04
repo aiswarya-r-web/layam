@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PawPrint, Send, X } from 'lucide-react'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+import { useAssistant } from '../context/AssistantContext'
 import Spinner from './Spinner'
 
 const SUGGESTIONS = [
@@ -17,7 +18,7 @@ const GREETING = {
 
 export default function PawAssistant() {
   const { user } = useAuth()
-  const [open, setOpen] = useState(false)
+  const { open, setOpen } = useAssistant()
   const [messages, setMessages] = useState([GREETING])
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)

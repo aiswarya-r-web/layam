@@ -3,6 +3,7 @@ import {
   getAllOrders,
   getAllProducts,
   getAllUsers,
+  getAnalytics,
   getDashboard,
   updateOrderStatus,
 } from '../controllers/adminController.js'
@@ -13,6 +14,7 @@ const router = Router()
 router.use(protect, adminOnly)
 
 router.get('/dashboard', getDashboard)
+router.get('/analytics', getAnalytics)
 router.get('/orders', getAllOrders)
 router.patch('/orders/:id/status', updateOrderStatus)
 router.get('/users', getAllUsers)

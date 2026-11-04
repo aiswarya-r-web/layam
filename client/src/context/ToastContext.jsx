@@ -23,7 +23,7 @@ export function ToastProvider({ children }) {
     (message, type = 'success') => {
       const id = ++idSeq
       setToasts((t) => [...t, { id, message, type }])
-      setTimeout(() => dismiss(id), 3500)
+      setTimeout(() => dismiss(id), 5000)
     },
     [dismiss]
   )
@@ -37,8 +37,9 @@ export function ToastProvider({ children }) {
           return (
             <div
               key={t.id}
-              className="toast-item pointer-events-auto flex items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-4 py-3 shadow-xl"
+              className="toast-item pointer-events-auto flex min-h-[64px] items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-4 py-4 shadow-xl"
             >
+              <img src="/Dogne.gif" alt="" className="toast-dog" />
               <Icon size={20} className={`shrink-0 ${COLORS[t.type]}`} />
               <p className="flex-1 text-sm font-semibold text-[var(--text)]">{t.message}</p>
               <button

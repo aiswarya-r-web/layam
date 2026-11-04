@@ -28,6 +28,63 @@ export const getDashboard = async (req, res) => {
   })
 }
 
+export const getAnalytics = async (req, res) => {
+  const since = new Date(Date.now() - 13 * 86400000)
+  since.setHours(0, 0, 0, 0)
+
+  const [revenueByDay, ordersByStatus, topProducts, avgAgg, paidOrders] =
+    await Promise.all([
+      Order.aggregate([
+        { $match: { createdAt: { $gte: since }, orderStatus: { $ne: 'cancelled' } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+            total: { $sum: '$totalAmount' },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
+      Order.aggregate([
+        { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
+      ]),
+      Order.aggregate([
+        { $match: { orderStatus: { $ne: 'cancelled' } } },
+        { $unwind: '$items' },
+        {
+          $group: {
+            _id: '$items.productId',
+            name: { $first: '$items.productName' },
+            qty: { $sum: '$items.quantity' },
+            revenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
+          },
+        },
+        { $sort: { qty: -1 } },
+        { $limit: 5 },
+      ]),
+      Order.aggregate([
+        { $match: { orderStatus: { $ne: 'cancelled' } } },
+        { $group: { _id: null, avg: { $avg: '$totalAmount' } } },
+      ]),
+      Order.countDocuments({ paymentStatus: 'paid' }),
+    ])
+
+  const days = []
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(since.getTime() + i * 86400000).toISOString().slice(0, 10)
+    const found = revenueByDay.find((r) => r._id === d)
+    days.push({ date: d, total: found?.total || 0, count: found?.count || 0 })
+  }
+
+  res.json({
+    revenueByDay: days,
+    ordersByStatus: ordersByStatus.reduce((o, s) => ({ ...o, [s._id]: s.count }), {}),
+    topProducts,
+    avgOrderValue: Math.round(avgAgg[0]?.avg || 0),
+    paidOrders,
+  })
+}
+
 export const getAllOrders = async (req, res) => {
   const { status, page = 1, limit = 20 } = req.query
   const filter = status ? { orderStatus: status } : {}

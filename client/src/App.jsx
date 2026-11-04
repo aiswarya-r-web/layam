@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { AssistantProvider } from './context/AssistantContext'
 import { ToastProvider } from './context/ToastContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -22,6 +23,7 @@ import Checkout from './pages/Checkout'
 import Orders from './pages/Orders'
 import OrderDetails from './pages/OrderDetails'
 import Spin from './pages/Spin'
+import PaymentSuccess from './pages/PaymentSuccess'
 import Profile from './pages/Profile'
 import MyDogs from './pages/MyDogs'
 import About from './pages/About'
@@ -35,6 +37,7 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <ThemeProvider>
+          <AssistantProvider>
           <CartProvider>
           <div className="flex min-h-screen flex-col bg-[var(--page)] text-[var(--text)]">
             <Navbar />
@@ -56,6 +59,7 @@ export default function App() {
                 <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
                 <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
                 <Route path="/orders/:id/spin" element={<ProtectedRoute><Spin /></ProtectedRoute>} />
+                <Route path="/payment/success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/dogs" element={<ProtectedRoute><MyDogs /></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute admin><AdminDashboard /></ProtectedRoute>} />
@@ -67,6 +71,7 @@ export default function App() {
             <PawAssistant />
           </div>
           </CartProvider>
+          </AssistantProvider>
           </ThemeProvider>
         </AuthProvider>
       </ToastProvider>

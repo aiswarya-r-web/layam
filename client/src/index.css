@@ -98,7 +98,26 @@ body {
 }
 
 .toast-item {
+  position: relative;
   animation: toast-in 0.2s ease-out;
+}
+
+@keyframes dog-walk-across {
+  from {
+    transform: translateX(-45px);
+  }
+  to {
+    transform: translateX(calc(320px + 10px));
+  }
+}
+
+.toast-dog {
+  position: absolute;
+  top: -33px;
+  left: 0;
+  height: 40px;
+  animation: dog-walk-across 4.8s linear forwards;
+  pointer-events: none;
 }
 
 @keyframes dog-wiggle {

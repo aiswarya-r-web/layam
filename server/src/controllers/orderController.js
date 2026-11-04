@@ -3,7 +3,43 @@ import Cart from '../models/Cart.js'
 import Coupon from '../models/Coupon.js'
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
+import { getStripe } from '../config/stripe.js'
 import { applyCoupon, deliveryChargeFor } from '../utils/pricing.js'
+
+const rollbackOrder = async (order) => {
+  const session = await mongoose.startSession()
+  try {
+    await session.withTransaction(async () => {
+      for (const item of order.items) {
+        await Product.updateOne(
+          { _id: item.productId },
+          { $inc: { stock: item.quantity } },
+          { session }
+        )
+      }
+      if (order.couponCode) {
+        await Coupon.updateOne(
+          { code: order.couponCode, usedCount: { $gt: 0 } },
+          { $inc: { usedCount: -1 } },
+          { session }
+        )
+      }
+      await Cart.findOneAndUpdate(
+        { userId: order.userId },
+        {
+          items: order.items.map((i) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          })),
+        },
+        { session }
+      )
+      await Order.deleteOne({ _id: order._id }, { session })
+    })
+  } finally {
+    session.endSession()
+  }
+}
 
 const validateCoupon = async (code, subtotal, userId) => {
   if (!code) return { coupon: null, discount: 0 }
@@ -29,8 +65,8 @@ export const createOrder = async (req, res) => {
   if (!shippingAddress?.name || !shippingAddress?.street || !shippingAddress?.city) {
     return res.status(400).json({ message: 'Complete shipping address is required' })
   }
-  if (paymentMethod !== 'cod') {
-    return res.status(400).json({ message: 'Only Cash on Delivery is supported' })
+  if (!['cod', 'stripe'].includes(paymentMethod)) {
+    return res.status(400).json({ message: 'Unsupported payment method' })
   }
 
   const cart = await Cart.findOne({ userId: req.user._id }).populate('items.productId')
@@ -85,7 +121,7 @@ export const createOrder = async (req, res) => {
             deliveryCharge,
             totalAmount,
             couponCode: coupon?.code,
-            paymentMethod: 'cod',
+            paymentMethod,
             paymentStatus: 'pending',
             orderStatus: 'pending',
           },
@@ -105,7 +141,78 @@ export const createOrder = async (req, res) => {
       await cart.save({ session })
     })
 
-    res.status(201).json({ order })
+    if (paymentMethod === 'cod') {
+      return res.status(201).json({ order })
+    }
+
+    const stripe = getStripe()
+    if (!stripe) {
+      await rollbackOrder(order)
+      return res.status(503).json({ message: 'Online payment is not configured' })
+    }
+
+    try {
+      const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173'
+
+      const itemCount = order.items.reduce((s, i) => s + i.quantity, 0)
+      const lineItems = [
+        {
+          price_data: {
+            currency: 'inr',
+            product_data: {
+              name: `Layam order #${order._id.toString().slice(-8).toUpperCase()} — ${itemCount} item${itemCount > 1 ? 's' : ''}`,
+            },
+            unit_amount: Math.round(order.subtotal * 100),
+          },
+          quantity: 1,
+        },
+      ]
+      if (order.deliveryCharge > 0) {
+        lineItems.push({
+          price_data: {
+            currency: 'inr',
+            product_data: { name: 'Delivery charge' },
+            unit_amount: Math.round(order.deliveryCharge * 100),
+          },
+          quantity: 1,
+        })
+      }
+
+      let discounts
+      if (order.discount > 0 && order.totalAmount > 0) {
+        const stripeCoupon = await stripe.coupons.create({
+          amount_off: Math.round(order.discount * 100),
+          currency: 'inr',
+          duration: 'once',
+          name: order.couponCode || 'Discount',
+        })
+        discounts = [{ coupon: stripeCoupon.id }]
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        mode: 'payment',
+        line_items: lineItems,
+        discounts,
+        metadata: {
+          type: 'order',
+          orderId: order._id.toString(),
+          userId: req.user._id.toString(),
+        },
+        payment_intent_data: {
+          metadata: { orderId: order._id.toString(), type: 'order' },
+        },
+        client_reference_id: req.user._id.toString(),
+        customer_email: req.user.email,
+        success_url: `${clientUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${clientUrl}/checkout?cancelled=1`,
+      })
+      order.stripeSessionId = session.id
+      await order.save()
+      res.json({ url: session.url, orderId: order._id })
+    } catch (err) {
+      await rollbackOrder(order)
+      res.status(502).json({ message: 'Could not start payment. Please try again.' })
+    }
   } catch (err) {
     res.status(400).json({ message: err.message })
   } finally {

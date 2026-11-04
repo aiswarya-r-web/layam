@@ -18,6 +18,8 @@ import birthdayRoutes from './routes/birthdayRoutes.js'
 import adminBirthdayRoutes from './routes/adminBirthdayRoutes.js'
 import assistantRoutes from './routes/assistantRoutes.js'
 import spinRoutes from './routes/spinRoutes.js'
+import stripeRoutes from './routes/stripeRoutes.js'
+import { stripeWebhook } from './controllers/stripeController.js'
 import { scheduleBirthdayJob } from './jobs/birthdayJob.js'
 
 dotenv.config()
@@ -25,7 +27,17 @@ dotenv.config()
 const app = express()
 
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',')
-app.use(cors({ origin: allowedOrigins }))
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+)
+
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook)
+
 app.use(express.json())
 
 app.get('/api/health', (req, res) => {
@@ -46,6 +58,7 @@ app.use('/api/admin/birthdays', adminBirthdayRoutes)
 app.use('/api/birthday', birthdayRoutes)
 app.use('/api/assistant', assistantRoutes)
 app.use('/api/spin', spinRoutes)
+app.use('/api/stripe', stripeRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

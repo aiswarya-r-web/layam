@@ -36,6 +36,7 @@ export default function Checkout() {
   const [busy, setBusy] = useState(false)
   const [couponBusy, setCouponBusy] = useState(false)
   const [celebrating, setCelebrating] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('cod')
 
   const confetti = Array.from({ length: 36 }, (_, i) => ({
     left: `${(i * 83) % 100}%`,
@@ -83,8 +84,12 @@ export default function Checkout() {
       const res = await api.post('/orders', {
         shippingAddress: address,
         couponCode: coupon?.code,
-        paymentMethod: 'cod',
+        paymentMethod,
       })
+      if (paymentMethod === 'stripe') {
+        window.location.href = res.data.url
+        return
+      }
       await refresh()
       toast('Order placed successfully')
       setCelebrating(true)
@@ -97,11 +102,14 @@ export default function Checkout() {
     }
   }
 
-  if (cartLoading) return <LoadingSpinner text="Preparing checkout..." />
+  useEffect(() => {
+    if (!cartLoading && cart.items.length === 0) {
+      navigate('/cart', { replace: true })
+    }
+  }, [cart.items.length, cartLoading, navigate])
 
-  if (cart.items.length === 0) {
-    navigate('/cart', { replace: true })
-    return null
+  if (cartLoading || cart.items.length === 0) {
+    return <LoadingSpinner text="Preparing checkout..." />
   }
 
   const addrFields = [
@@ -131,13 +139,34 @@ export default function Checkout() {
           </div>
 
           <h2 className="mt-8 font-extrabold text-[var(--ink)]">Payment</h2>
-          <label className="mt-3 flex items-center gap-3 rounded-2xl border-2 border-[var(--brand)] bg-[var(--page)] p-4">
-            <input type="radio" checked readOnly className="accent-[var(--brand)]" />
-            <div>
-              <p className="font-bold text-[var(--ink)]">Cash on Delivery</p>
-              <p className="text-xs text-[var(--muted)]">Pay when your order arrives</p>
-            </div>
-          </label>
+          <div className="mt-3 space-y-3">
+            <label className={`flex cursor-pointer items-center gap-3 rounded-2xl border-2 p-4 ${paymentMethod === 'cod' ? 'border-[var(--brand)] bg-[var(--page)]' : 'border-[var(--line)]'}`}>
+              <input
+                type="radio"
+                name="payment"
+                checked={paymentMethod === 'cod'}
+                onChange={() => setPaymentMethod('cod')}
+                className="accent-[var(--brand)]"
+              />
+              <div>
+                <p className="font-bold text-[var(--ink)]">Cash on Delivery</p>
+                <p className="text-xs text-[var(--muted)]">Pay when your order arrives</p>
+              </div>
+            </label>
+            <label className={`flex cursor-pointer items-center gap-3 rounded-2xl border-2 p-4 ${paymentMethod === 'stripe' ? 'border-[var(--brand)] bg-[var(--page)]' : 'border-[var(--line)]'}`}>
+              <input
+                type="radio"
+                name="payment"
+                checked={paymentMethod === 'stripe'}
+                onChange={() => setPaymentMethod('stripe')}
+                className="accent-[var(--brand)]"
+              />
+              <div>
+                <p className="font-bold text-[var(--ink)]">Pay Online</p>
+                <p className="text-xs text-[var(--muted)]">UPI, cards & netbanking via Stripe</p>
+              </div>
+            </label>
+          </div>
         </div>
 
         <div className="h-fit rounded-[25px] border border-[var(--line)] bg-white p-6 shadow-sm">
