@@ -42,7 +42,7 @@ export default function Navbar() {
     `transition hover:text-[var(--accent-dark)] ${isActive ? 'font-bold text-[var(--brand)]' : ''}`
 
   return (
-    <nav className="sticky top-0 z-40 flex h-[82px] items-center justify-between border-b border-[var(--line)] bg-[var(--card)]/95 px-6 backdrop-blur md:px-14 lg:px-20">
+    <nav className="sticky top-0 z-40 flex h-[74px] items-center justify-between border-b border-[var(--line)] bg-[var(--card)]/95 px-6 backdrop-blur md:px-14 lg:px-20">
       <Link to="/" className="flex min-w-0 items-center gap-2">
         <img
           src="/dog-pic.png"
