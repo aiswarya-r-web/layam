@@ -1,1 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Non-veg theme (default brown palette) */
+:root {
+  --brand: #7a4a21;
+  --brand-dark: #5f3a19;
+  --ink: #5d3a1a;
+  --text: #382619;
+  --accent-dark: #8a5a2b;
+  --muted: #8a6a4a;
+  --muted-dark: #6b553f;
+  --label: #6b4423;
+  --faint: #a08b74;
+  --rust: #a0522d;
+  --gold-dark: #b8801f;
+  --tan: #c9a87c;
+  --sand: #d9c39a;
+  --line: #e8dcc8;
+  --line-2: #e5d3b3;
+  --cream: #f1e6d2;
+  --cream-2: #f1e3cb;
+  --cream-3: #f7ead6;
+  --gold-lite: #f2cf8b;
+  --card: #fdf9f0;
+  --card-2: #fdf3e3;
+  --cream-x: #fff8ed;
+  --gold-x: #fff0c9;
+  --peach: #ffe9d7;
+  --peach-2: #ffe8d2;
+  --page: #faf3e7;
+  --input: #faf9f5;
+  --chip: #faf7f0;
+  --gold: #dda044;
+  --gold-2: #f4b860;
+  --gold-3: #e8c168;
+}
+
+/* Veg theme (green palette) */
+:root[data-theme='veg'] {
+  --brand: #2e7d32;
+  --brand-dark: #1b5e20;
+  --ink: #14532d;
+  --text: #24392a;
+  --accent-dark: #35803d;
+  --muted: #5d7d60;
+  --muted-dark: #435d46;
+  --label: #2f6b38;
+  --faint: #8fa693;
+  --rust: #2f8a3d;
+  --gold-dark: #6b9e3c;
+  --tan: #a9c9ac;
+  --sand: #bcd6bf;
+  --line: #d3e3d5;
+  --line-2: #c4dac7;
+  --cream: #e4efe3;
+  --cream-2: #e6f0e4;
+  --cream-3: #e9f3e3;
+  --gold-lite: #d5e8bc;
+  --card: #f6faf3;
+  --card-2: #f4f9ee;
+  --cream-x: #f1f8ec;
+  --gold-x: #eef6d8;
+  --peach: #eef7ea;
+  --peach-2: #eef7ec;
+  --page: #eef5e8;
+  --input: #f7faf3;
+  --chip: #f3f8ee;
+  --gold: #66bb6a;
+  --gold-2: #81c784;
+  --gold-3: #9ccc65;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-item {
+  position: relative;
+  animation: toast-in 0.2s ease-out;
+}
+
+@keyframes dog-walk-across {
+  from {
+    transform: translateX(-45px);
+  }
+  to {
+    transform: translateX(calc(320px + 10px));
+  }
+}
+
+.toast-dog {
+  position: absolute;
+  top: -33px;
+  left: 0;
+  height: 40px;
+  animation: dog-walk-across 4.8s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes dog-wiggle {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-4px);
+  }
+}
+
+.logo-dog {
+  animation: dog-wiggle 1.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(420px) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  animation: confetti-fall 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes confetti-rise {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+.confetti-rise-piece {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 2px;
+  animation: confetti-rise 1.7s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes cracker-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1);
+    opacity: 0;
+  }
+}
+
+.cracker-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  box-shadow: 0 0 8px 2px currentColor;
+  animation: cracker-pop 1.9s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes paw-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1.25) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+.paw-particle {
+  position: absolute;
+  animation: paw-burst 0.7s ease-out forwards;
+  pointer-events: none;
+}
