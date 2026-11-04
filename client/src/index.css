@@ -120,6 +120,24 @@ body {
   pointer-events: none;
 }
 
+@keyframes search-dog-walk {
+  from {
+    left: -50px;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.search-dog {
+  position: absolute;
+  top: -34px;
+  left: -50px;
+  height: 38px;
+  animation: search-dog-walk 7s linear infinite;
+  pointer-events: none;
+}
+
 @keyframes dog-wiggle {
   0%,
   100% {

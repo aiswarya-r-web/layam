@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 import api from '../api/axios'
 import ProductCard from '../components/ProductCard'
 import ProductCardSkeleton from '../components/ProductCardSkeleton'
@@ -29,6 +29,7 @@ export default function Shop() {
   const [pagination, setPagination] = useState({ total: 0, pages: 1 })
   const [loading, setLoading] = useState(true)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [searchInput, setSearchInput] = useState(searchParams.get('search') || '')
   const placeholder = useTypewriter(SEARCH_PHRASES)
 
   const params = {
@@ -69,6 +70,19 @@ export default function Shop() {
     setSearchParams(next)
   }
 
+  // Sync box when the URL changes elsewhere (clear, back/forward nav)
+  useEffect(() => {
+    setSearchInput(params.search)
+  }, [params.search])
+
+  // Debounce typing → URL param → API call
+  useEffect(() => {
+    if (searchInput === params.search) return
+    const t = setTimeout(() => setParam('search', searchInput), 400)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput])
+
   const page = Number(params.page)
 
   return (
@@ -80,14 +94,27 @@ export default function Shop() {
         </div>
 
         <div className="flex w-full gap-3 sm:w-auto">
-          <div className="relative flex-1 sm:w-72">
-            <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--faint)]" />
-            <input
-              value={params.search}
-              onChange={(e) => setParam('search', e.target.value)}
-              placeholder={placeholder}
-              className="w-full rounded-full border border-[var(--line-2)] bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[var(--accent-dark)]"
+          <div className="group relative flex-1 sm:w-80">
+            <img src="/Dogne.gif" alt="" className="search-dog" />
+            <Search
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--faint)] transition group-focus-within:text-[var(--brand)]"
             />
+            <input
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder={placeholder}
+              className="w-full rounded-full border border-[var(--line-2)] bg-white py-3 pl-11 pr-10 text-sm shadow-sm outline-none transition placeholder:text-[var(--faint)] hover:border-[var(--sand)] focus:border-[var(--brand)] focus:shadow-[0_0_0_4px_var(--cream-2)]"
+            />
+            {searchInput && (
+              <button
+                onClick={() => { setSearchInput(''); setParam('search', '') }}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[var(--faint)] transition hover:bg-[var(--cream)] hover:text-[var(--ink)]"
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
           <button
             onClick={() => setFiltersOpen((o) => !o)}
