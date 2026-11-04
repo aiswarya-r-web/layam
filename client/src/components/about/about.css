@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+/* Vaalu About Page Scoped Design Tokens */
+.about-page-wrapper {
+  --about-cream: #FFF7EE;
+  --about-dark-brown: #3C2214;
+  --about-forest-green: #2B5222;
+  --about-forest-green-hover: #21401a;
+  --about-sage-green: #EBF1E4;
+  --about-soft-peach: #FAF0E4;
+  --about-peach-blob: #F9EBDB;
+  --about-orange: #D68A19;
+  --about-text-dark: #33241A;
+  --about-tan-paw: #EBD8C4;
+
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--about-cream);
+  color: var(--about-text-dark);
+  min-height: 100%;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Headings Serif */
+.about-page-wrapper .font-serif-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.015em;
+}
+
+/* Primary Green Pill Button (Capsule Shape) */
+.about-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: fit-content;
+  max-width: max-content;
+  white-space: nowrap;
+  background-color: var(--about-forest-green);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 2.1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(43, 82, 34, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.about-btn-pill:hover {
+  background-color: var(--about-forest-green-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(43, 82, 34, 0.35);
+}
+
+.about-btn-pill:active {
+  transform: translateY(0);
+}
+
+/* Eyebrow Badge */
+.about-eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #F8EADB;
+  color: var(--about-dark-brown);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+}
+
+/* Hero Section */
+.about-hero-section {
+  position: relative;
+  background-color: var(--about-cream);
+  min-height: 440px;
+}
+
+@media (min-width: 1024px) {
+  .about-hero-section {
+    height: 460px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.about-hero-img-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .about-hero-img-container {
+    height: 460px;
+    clip-path: ellipse(115% 98% at 75% 0%);
+  }
+}
+
+/* Beagle Puppy Image Frame */
+.about-beagle-frame {
+  border-radius: 140px 140px 60px 60px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px -10px rgba(60, 34, 20, 0.12);
+  transition: transform 0.4s ease;
+}
+
+.about-beagle-frame:hover {
+  transform: scale(1.02);
+}
+
+/* Mission & Vision Cards */
+.about-mission-box {
+  background-color: var(--about-sage-green);
+  border-radius: 24px;
+  padding: 2rem 1.85rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  height: 100%;
+}
+
+.about-vision-box {
+  background-color: var(--about-soft-peach);
+  border-radius: 24px;
+  padding: 2rem 1.85rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  height: 100%;
+}
+
+.about-mission-box:hover,
+.about-vision-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 26px -8px rgba(60, 34, 20, 0.1);
+}
+
+/* Core Values Horizontal Row */
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .about-values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-values-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.about-value-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.25rem 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.about-value-col:hover {
+  transform: translateY(-2px);
+}
+
+@media (min-width: 1024px) {
+  .about-value-col:not(:first-child) {
+    border-left: 1px solid rgba(60, 34, 20, 0.12);
+  }
+}
+
+/* Statistics Pill Container */
+.about-stats-pill-container {
+  background-color: var(--about-forest-green);
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 1.6rem 3rem;
+  box-shadow: 0 16px 36px -8px rgba(43, 82, 34, 0.4);
+}
+
+@media (max-width: 768px) {
+  .about-stats-pill-container {
+    border-radius: 32px;
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+/* Family CTA Bottom Section */
+.about-family-img-frame {
+  border-radius: 140px 160px 50px 50px;
+  overflow: hidden;
+  box-shadow: 0 16px 32px -12px rgba(60, 34, 20, 0.14);
+}
+
+@media (min-width: 1024px) {
+  .about-family-img-frame {
+    clip-path: ellipse(96% 90% at 30% 65%);
+    border-radius: 0;
+  }
+}
+
+/* Asymmetrical Organic Flowing Blob for Peach Background */
+.about-peach-blob-bg {
+  background-color: var(--about-peach-blob);
+  border-radius: 65% 35% 58% 42% / 46% 62% 38% 54%;
+  box-shadow: 0 16px 36px -12px rgba(60, 34, 20, 0.07);
+}
+
+@media (min-width: 1024px) {
+  .about-peach-blob-bg {
+    border-radius: 68% 32% 54% 46% / 42% 64% 36% 58%;
+  }
+}
+
+/* Subtle paw floating */
+@keyframes aboutFloatSubtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.about-float-subtle {
+  animation: aboutFloatSubtle 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-float-subtle {
+    animation: none !important;
+  }
+}
